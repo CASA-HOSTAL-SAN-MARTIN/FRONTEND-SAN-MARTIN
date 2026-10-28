@@ -10,7 +10,7 @@ Interfaz web del sistema de gestión de la **Casa Estudiantil San Martín**. Per
 
 La Casa Estudiantil San Martín es una residencia universitaria mixta ubicada en la Carrera 12 # 21-45, barrio Centro de Pereira, para estudiantes de pregrado (principalmente foráneos) vinculada a la Universidad del Otún a través de su oficina de Bienestar Universitario. El inmueble pertenece a la Fundación San Martín de Porres. Cuenta con tres pisos y un sótano de lavado, con **24 habitaciones dobles y 48 camas**. Por reglamento, el piso 1 es para mujeres, el piso 2 para hombres y el piso 3 para casos especiales. Hay 3 cupos de beca de alojamiento pagados por la Universidad.
 
-Hoy la operación es manual y fragmentada: **dos listas de Excel que no coinciden** (`Camas_Fundacion.xlsx` y `Espera_Bienestar.xlsx`), solicitudes por Google Forms y WhatsApp, pagos a una cuenta personal, reportes de daños en chats y libretas, y visitas en un cuaderno. Esa falta de una "verdad única" ya causó incidentes, como la **doble asignación de la cama 1-A** (enero de 2026) y disputas por daños que no tenían evidencia fotográfica.
+la operación es manual y fragmentada: **dos listas de Excel que no coinciden** (`Camas_Fundacion.xlsx` y `Espera_Bienestar.xlsx`), solicitudes por Google Forms y WhatsApp, pagos a una cuenta personal, reportes de daños en chats y libretas, y visitas en un cuaderno. Esa falta de una "verdad única" ya causó incidentes, como la **doble asignación de la cama 1-A** (enero de 2026) y disputas por daños que no tenían evidencia fotográfica.
 
 ## 🎯 Propósito
 
@@ -31,10 +31,10 @@ Hoy la operación es manual y fragmentada: **dos listas de Excel que no coincide
 - Reportes de mantenimiento con seguimiento de su estado.
 - Registro de incidentes y de visitas.
 - Reportes y panel con indicadores para administración.
+- - Pasarela de pagos en línea.
 
 **No incluye**
 - Aplicación móvil nativa (la web es responsive).
-- Pasarela de pagos en línea.
 - Lógica de negocio crítica: las reglas y validaciones finales las aplica el backend.
 
 ## 👥 Usuarios y pantallas
