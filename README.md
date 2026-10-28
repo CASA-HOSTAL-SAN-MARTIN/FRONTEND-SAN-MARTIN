@@ -31,10 +31,10 @@ la operación es manual y fragmentada: **dos listas de Excel que no coinciden** 
 - Reportes de mantenimiento con seguimiento de su estado.
 - Registro de incidentes y de visitas.
 - Reportes y panel con indicadores para administración.
-- - Pasarela de pagos en línea.
 
 **No incluye**
 - Aplicación móvil nativa (la web es responsive).
+- Pasarela de pagos en línea.
 - Lógica de negocio crítica: las reglas y validaciones finales las aplica el backend.
 
 ## 👥 Usuarios y pantallas
