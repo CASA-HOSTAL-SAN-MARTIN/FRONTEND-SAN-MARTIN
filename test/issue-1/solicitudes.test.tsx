@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { createSolicitud, getSolicitud, getSolicitudes } from '../src/api/client';
-import { SolicitudesPage } from '../src/pages/SolicitudesPage';
+import { createSolicitud, getSolicitud, getSolicitudes } from '../../src/api/client';
+import { SolicitudesPage } from '../../src/pages/SolicitudesPage';
 
-vi.mock('../src/api/client', () => ({
+vi.mock('../../src/api/client', () => ({
   createSolicitud: vi.fn(),
   getSolicitud: vi.fn(),
   getSolicitudes: vi.fn(),
