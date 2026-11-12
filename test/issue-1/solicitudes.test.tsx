@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createSolicitud, getSolicitud, getSolicitudes } from '../../src/api/client';
 import { SolicitudesPage } from '../../src/pages/SolicitudesPage';
@@ -33,6 +34,10 @@ function fillRequiredFields() {
   fireEvent.change(screen.getByLabelText('Universidad *'), { target: { value: 'Universidad del Otún' } });
 }
 
+function renderPage() {
+  return render(<MemoryRouter><SolicitudesPage /></MemoryRouter>);
+}
+
 describe('Solicitud de cupo', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -41,7 +46,7 @@ describe('Solicitud de cupo', () => {
   });
 
   it('marca como obligatorios los campos definidos por la API', () => {
-    render(<SolicitudesPage />);
+    renderPage();
 
     expect(screen.getByLabelText('Nombres *')).toBeRequired();
     expect(screen.getByLabelText('Apellidos *')).toBeRequired();
@@ -53,7 +58,7 @@ describe('Solicitud de cupo', () => {
   });
 
   it('envía la solicitud y muestra el radicado devuelto por la API', async () => {
-    render(<SolicitudesPage />);
+    renderPage();
     fillRequiredFields();
     fireEvent.submit(screen.getByRole('button', { name: 'Enviar solicitud' }).closest('form')!);
 
@@ -72,7 +77,7 @@ describe('Solicitud de cupo', () => {
 
   it('consulta y muestra el estado mediante el identificador', async () => {
     vi.mocked(getSolicitud).mockResolvedValue(createdSolicitud);
-    render(<SolicitudesPage />);
+    renderPage();
     fireEvent.click(screen.getByRole('button', { name: 'Consultar estado' }));
     fireEvent.change(screen.getByLabelText('Identificador de solicitud *'), { target: { value: createdSolicitud.id } });
     fireEvent.submit(screen.getByLabelText('Identificador de solicitud *').closest('form')!);
@@ -86,7 +91,7 @@ describe('Solicitud de cupo', () => {
       response: { data: { message: 'Ya existe una solicitud registrada' } },
       isAxiosError: true,
     });
-    render(<SolicitudesPage />);
+    renderPage();
     fillRequiredFields();
     fireEvent.submit(screen.getByRole('button', { name: 'Enviar solicitud' }).closest('form')!);
 
@@ -95,7 +100,7 @@ describe('Solicitud de cupo', () => {
 
   it('restringe el listado general a roles autorizados', () => {
     localStorage.setItem('userRole', 'ASPIRANTE_RESIDENTE');
-    render(<SolicitudesPage />);
+    renderPage();
     fireEvent.click(screen.getByRole('button', { name: 'Panel autorizado' }));
 
     expect(screen.getByText('Acceso restringido')).toBeInTheDocument();

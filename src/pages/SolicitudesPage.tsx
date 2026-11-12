@@ -1,5 +1,6 @@
 import { type FormEvent, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { createSolicitud, getSolicitud, getSolicitudes } from '../api/client';
 import type { Solicitud, SolicitudPayload, SolicitudEstado, UserRole } from '../types';
 
@@ -105,7 +106,10 @@ export function SolicitudesPage() {
           <p className="eyebrow">Casa Estudiantil San Martín</p>
           <h1>Solicitud de cupo</h1>
         </div>
-        <span className="header-mark">CS</span>
+        <div className="header-actions">
+          <Link className="header-link" to="/camas">Estado de camas</Link>
+          <span className="header-mark">CS</span>
+        </div>
       </header>
 
       <section className="hero">
