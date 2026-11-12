@@ -102,31 +102,40 @@ export function SolicitudesPage() {
   return (
     <main className="app-shell">
       <header className="topbar">
-        <div>
-          <p className="eyebrow">Casa Estudiantil San Martín</p>
-          <h1>Solicitud de cupo</h1>
-        </div>
+        <Link className="brand" to="/">
+          <span className="brand-seal">SM</span>
+          <span className="brand-name">CASA ESTUDIANTIL<strong>SAN MARTÍN</strong></span>
+        </Link>
         <div className="header-actions">
-          <Link className="header-link" to="/camas">Estado de camas</Link>
+          <span className="topbar-divider" />
+          <span className="header-page active"><span aria-hidden="true">⌂</span> Solicitud de cupo</span>
+          <Link className="header-link" to="/camas">Estado de camas <span aria-hidden="true">▰</span></Link>
+          <span className="topbar-divider" />
           <span className="header-mark">CS</span>
         </div>
       </header>
 
       <section className="hero">
-        <p className="eyebrow">Admisiones</p>
-        <h2>Encuentra tu lugar para vivir y estudiar</h2>
-        <p>Registra tu solicitud de cupo o consulta el estado de una solicitud existente.</p>
+        <div className="hero-copy">
+          <p className="eyebrow hero-label"><span aria-hidden="true">▣</span> Admisiones</p>
+          <h2>Encuentra tu lugar para vivir y estudiar</h2>
+          <p>Registra tu solicitud de cupo o consulta el estado de una solicitud existente.</p>
+          <span className="hero-rule" />
+        </div>
+        <div className="hero-image">
+          <img src="/university-building.png" alt="Edificio universitario rodeado de jardines" />
+        </div>
       </section>
 
       <nav className="tabs" aria-label="Secciones de solicitudes">
         <button className={activeTab === 'create' ? 'tab active' : 'tab'} onClick={() => setActiveTab('create')}>
-          Solicitar cupo
+          <span aria-hidden="true">▰</span> Solicitar cupo
         </button>
         <button className={activeTab === 'lookup' ? 'tab active' : 'tab'} onClick={() => setActiveTab('lookup')}>
-          Consultar estado
+          <span aria-hidden="true">⌕</span> Consultar estado
         </button>
         <button className={activeTab === 'admin' ? 'tab active' : 'tab'} onClick={() => setActiveTab('admin')}>
-          Panel autorizado
+          <span aria-hidden="true">◆</span> Panel autorizado
         </button>
       </nav>
 
@@ -138,23 +147,26 @@ export function SolicitudesPage() {
 
       {activeTab === 'create' && (
         <section className="card">
-          <div className="section-heading">
-            <div><p className="eyebrow">Paso 1 de 1</p><h3>Cuéntanos sobre ti</h3></div>
-            <span className="required-note">* Obligatorio</span>
-          </div>
-          <form onSubmit={handleCreate}>
-            <div className="form-grid">
-              <label>Nombres *<input required maxLength={100} value={form.nombres} onChange={(event) => updateField('nombres', event.target.value)} /></label>
-              <label>Apellidos *<input required maxLength={100} value={form.apellidos} onChange={(event) => updateField('apellidos', event.target.value)} /></label>
-              <label>Número de documento *<input required minLength={5} maxLength={30} value={form.numeroDocumento} onChange={(event) => updateField('numeroDocumento', event.target.value)} /></label>
-              <label>Correo electrónico *<input required type="email" value={form.correo} onChange={(event) => updateField('correo', event.target.value)} /></label>
-              <label>Teléfono *<input required minLength={7} maxLength={30} value={form.telefono} onChange={(event) => updateField('telefono', event.target.value)} /></label>
-              <label>Programa académico *<input required maxLength={150} value={form.programaAcademico} onChange={(event) => updateField('programaAcademico', event.target.value)} /></label>
-              <label className="full-width">Universidad *<input required maxLength={150} value={form.universidad} onChange={(event) => updateField('universidad', event.target.value)} /></label>
+          <div className="form-panel">
+            <div className="form-heading">
+              <span className="form-icon" aria-hidden="true">♙</span>
+              <div><p className="eyebrow">Paso 1 de 1</p><h3>Cuéntanos sobre ti</h3><p>Ingresa la información solicitada para radicar tu solicitud de cupo.</p></div>
             </div>
-            <button className="primary-button" disabled={loading} type="submit">{loading ? 'Enviando...' : 'Enviar solicitud'}</button>
-          </form>
-          {created && <div className="confirmation"><strong>¡Solicitud recibida!</strong><p>Guarda tu radicado para consultar el estado:</p><code>{created.id}</code><button className="link-button" onClick={() => { setLookupId(created.id); setActiveTab('lookup'); }}>Consultar esta solicitud</button></div>}
+            <form onSubmit={handleCreate}>
+              <div className="form-grid">
+                <label>Nombres *<input required maxLength={100} placeholder="Ej. Juan Carlos" value={form.nombres} onChange={(event) => updateField('nombres', event.target.value)} /></label>
+                <label>Apellidos *<input required maxLength={100} placeholder="Ej. Pérez García" value={form.apellidos} onChange={(event) => updateField('apellidos', event.target.value)} /></label>
+                <label>Número de documento *<input required minLength={5} maxLength={30} placeholder="Ej. 12345678" value={form.numeroDocumento} onChange={(event) => updateField('numeroDocumento', event.target.value)} /></label>
+                <label>Correo electrónico *<input required type="email" placeholder="tu.correo@ejemplo.com" value={form.correo} onChange={(event) => updateField('correo', event.target.value)} /></label>
+                <label>Teléfono *<input required minLength={7} maxLength={30} placeholder="Ej. 3001234567" value={form.telefono} onChange={(event) => updateField('telefono', event.target.value)} /></label>
+                <label>Programa académico *<input required maxLength={150} placeholder="Selecciona un programa" value={form.programaAcademico} onChange={(event) => updateField('programaAcademico', event.target.value)} /></label>
+                <label className="full-width">Universidad *<input required maxLength={150} placeholder="Selecciona una universidad" value={form.universidad} onChange={(event) => updateField('universidad', event.target.value)} /></label>
+              </div>
+              <button className="primary-button submit-button" disabled={loading} type="submit"><span aria-hidden="true">➤</span> {loading ? 'Enviando...' : 'Enviar solicitud'}</button>
+            </form>
+            {created && <div className="confirmation"><strong>¡Solicitud recibida!</strong><p>Guarda tu radicado para consultar el estado:</p><code>{created.id}</code><button className="link-button" onClick={() => { setLookupId(created.id); setActiveTab('lookup'); }}>Consultar esta solicitud</button></div>}
+          </div>
+          <aside className="form-illustration" aria-hidden="true"><div className="illustration-sheet">✓<br />✓<br />✓</div><span className="illustration-cap">◆</span><span className="illustration-leaf leaf-one">⌁</span><span className="illustration-leaf leaf-two">⌁</span></aside>
         </section>
       )}
 
@@ -176,6 +188,7 @@ export function SolicitudesPage() {
           {!canViewAll ? <div className="locked"><strong>Acceso restringido</strong><p>Esta vista está disponible únicamente para personal autorizado de coordinación, administración del sistema o administración de la fundación.</p></div> : requests.length === 0 ? <p className="muted">Selecciona “Actualizar listado” para consultar las solicitudes.</p> : <div className="table-wrap"><table><thead><tr><th>Aspirante</th><th>Documento</th><th>Universidad</th><th>Estado</th><th>Radicado</th></tr></thead><tbody>{requests.map((request) => <tr key={request.id}><td>{request.nombres} {request.apellidos}</td><td>{request.numeroDocumento}</td><td>{request.universidad}</td><td><StatusBadge status={request.estado} /></td><td><code>{request.id.slice(0, 8)}...</code></td></tr>)}</tbody></table></div>}
         </section>
       )}
+      <footer className="site-footer">Casa Estudiantil San Martín <span>•</span> Apoyo, bienestar y educación</footer>
     </main>
   );
 }
