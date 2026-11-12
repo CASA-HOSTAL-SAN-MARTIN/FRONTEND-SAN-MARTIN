@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { type FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { getCamas } from '../api/client';
-import type { Cama, CamaEstado } from '../types';
+import { createAsignacion, getCamas } from '../api/client';
+import type { Asignacion, Cama, CamaEstado, UserRole } from '../types';
 
 type PisoFilter = 'todos' | '1' | '2' | '3';
 
@@ -11,6 +11,7 @@ const stateLabels: Record<CamaEstado, string> = {
   ocupada: 'Ocupada',
   bloqueada: 'Bloqueada',
 };
+const assignmentRoles: UserRole[] = ['ADMIN_SISTEMA', 'COORDINACION_BIENESTAR', 'ADMIN_FUNDACION'];
 
 function normalizeState(value: string): CamaEstado {
   const normalized = value.toLowerCase().replace(/[\s-]/g, '_');
@@ -42,6 +43,11 @@ export function CamasPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [studentId, setStudentId] = useState('');
+  const [selectedBedId, setSelectedBedId] = useState('');
+  const [pendingAssignment, setPendingAssignment] = useState<{ studentId: string; bed: Cama } | null>(null);
+  const [assignment, setAssignment] = useState<Asignacion | null>(null);
+  const [assignmentLoading, setAssignmentLoading] = useState(false);
 
   const loadCamas = useCallback(async () => {
     setLoading(true);
@@ -65,10 +71,42 @@ export function CamasPage() {
     () => selectedFloor === 'todos' ? camas : camas.filter((cama) => String(cama.piso) === selectedFloor),
     [camas, selectedFloor],
   );
+  const availableCamas = useMemo(() => camas.filter((cama) => cama.estado === 'disponible'), [camas]);
+  const canAssign = assignmentRoles.includes(localStorage.getItem('userRole') as UserRole);
   const floors = useMemo(() => [1, 2, 3].map((piso) => ({
     piso,
     rooms: groupByRoom(filteredCamas.filter((cama) => cama.piso === piso)),
   })).filter(({ rooms }) => Object.keys(rooms).length > 0), [filteredCamas]);
+
+  function requestAssignment(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError('');
+    setAssignment(null);
+    const bed = availableCamas.find((cama) => cama.id === selectedBedId);
+    if (bed && studentId.trim()) setPendingAssignment({ studentId: studentId.trim(), bed });
+  }
+
+  async function confirmAssignment() {
+    if (!pendingAssignment) return;
+    setAssignmentLoading(true);
+    setError('');
+    try {
+      const created = await createAsignacion({
+        estudianteId: pendingAssignment.studentId,
+        camaId: pendingAssignment.bed.id,
+      });
+      setAssignment(created);
+      setCamas((current) => current.map((cama) => cama.id === pendingAssignment.bed.id ? { ...cama, estado: 'ocupada' } : cama));
+      setPendingAssignment(null);
+      setStudentId('');
+      setSelectedBedId('');
+    } catch (requestError) {
+      setPendingAssignment(null);
+      setError(getApiError(requestError));
+    } finally {
+      setAssignmentLoading(false);
+    }
+  }
 
   return (
     <main className="app-shell">
@@ -109,6 +147,26 @@ export function CamasPage() {
 
       {lastUpdated && !loading && <p className="updated-at">Última actualización: {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>}
       {error && <div className="alert error" role="alert">{error}</div>}
+      {canAssign ? (
+        <section className="assignment-card">
+          <div className="section-heading">
+            <div><p className="eyebrow">Gestión autorizada</p><h3>Asignar una cama</h3></div>
+          </div>
+          <form className="assignment-form" onSubmit={requestAssignment}>
+            <label>Identificador del estudiante *
+              <input required value={studentId} onChange={(event) => setStudentId(event.target.value)} placeholder="Ej. estudiante-123" />
+            </label>
+            <label>Cama disponible *
+              <select required value={selectedBedId} onChange={(event) => setSelectedBedId(event.target.value)}>
+                <option value="">Selecciona una cama</option>
+                {availableCamas.map((cama) => <option key={cama.id} value={cama.id}>Piso {cama.piso} · Hab. {cama.habitacion} · Cama {cama.numero}</option>)}
+              </select>
+            </label>
+            <button className="primary-button" disabled={assignmentLoading || availableCamas.length === 0} type="submit">Iniciar asignación</button>
+          </form>
+          {assignment && <div className="assignment-success" role="status"><strong>Asignación confirmada</strong><span>Estudiante: {assignment.estudianteId}</span><span>Cama: {assignment.camaId}</span>{assignment.realizadoPor && <span>Realizada por: {assignment.realizadoPor}</span>}</div>}
+        </section>
+      ) : <div className="locked assignment-locked">La asignación de camas está disponible únicamente para personal autorizado.</div>}
       {loading && <div className="empty-state"><span className="loader" />Cargando estado de camas...</div>}
       {!loading && !error && filteredCamas.length === 0 && <div className="empty-state"><strong>No hay camas para mostrar</strong><span>Prueba con otro piso o actualiza la información.</span></div>}
       {!loading && !error && floors.map(({ piso, rooms }) => (
@@ -126,6 +184,12 @@ export function CamasPage() {
                       {cama.estado === 'bloqueada' && cama.motivoBloqueo && <span className="block-reason">Motivo: {cama.motivoBloqueo}</span>}
                     </div>
                   ))}
+                  {pendingAssignment && <div className="modal-backdrop"><section className="confirmation-modal" role="dialog" aria-modal="true" aria-labelledby="assignment-confirmation-title">
+                    <p className="eyebrow">Confirmar operación</p>
+                    <h3 id="assignment-confirmation-title">¿Confirmar asignación de cama?</h3>
+                    <p>Se asignará la cama {pendingAssignment.bed.numero} de la habitación {pendingAssignment.bed.habitacion} al estudiante <strong>{pendingAssignment.studentId}</strong>.</p>
+                    <div className="modal-actions"><button className="secondary-button" disabled={assignmentLoading} onClick={() => setPendingAssignment(null)}>Cancelar</button><button className="primary-button" disabled={assignmentLoading} onClick={() => void confirmAssignment()}>{assignmentLoading ? 'Confirmando...' : 'Confirmar asignación'}</button></div>
+                  </section></div>}
                 </div>
               </article>
             ))}
