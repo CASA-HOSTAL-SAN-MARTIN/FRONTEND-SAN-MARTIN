@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Solicitud, SolicitudPayload } from '../types';
+import type { Cama, Solicitud, SolicitudPayload } from '../types';
 
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000',
@@ -17,5 +17,10 @@ export async function getSolicitud(id: string) {
 
 export async function getSolicitudes() {
   const { data } = await apiClient.get<Solicitud[]>('/api/solicitudes');
+  return data;
+}
+
+export async function getCamas() {
+  const { data } = await apiClient.get<Cama[]>('/api/camas');
   return data;
 }

@@ -27,3 +27,14 @@ export type Solicitud = SolicitudPayload & {
   createdAt: string;
   updatedAt: string;
 };
+
+export type CamaEstado = 'disponible' | 'ocupada' | 'bloqueada';
+
+export type Cama = {
+  id: string;
+  piso: number;
+  habitacion: string;
+  numero: string;
+  estado: CamaEstado;
+  motivoBloqueo?: string | null;
+};

@@ -27,6 +27,8 @@ button:disabled { cursor: wait; opacity: .65; }
 .app-shell { max-width: 1120px; margin: 0 auto; padding: 28px 24px 64px; }
 .topbar { display: flex; align-items: center; justify-content: space-between; }
 .topbar h1 { margin: 2px 0 0; color: #172554; font-size: 1.25rem; }
+.header-actions { display: flex; align-items: center; gap: 18px; }
+.header-link { color: #1d4ed8; font-size: .86rem; font-weight: 800; text-decoration: none; }
 .header-mark { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 12px; color: white; background: #1d4ed8; font-weight: 800; }
 .eyebrow { margin: 0; color: #2563eb; font-size: .73rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
 .hero { margin: 64px 0 36px; max-width: 700px; }
@@ -48,6 +50,36 @@ input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px #2563eb1c; }
 .primary-button, .secondary-button { border: 0; border-radius: 9px; padding: 12px 19px; font-weight: 800; }
 .primary-button { margin-top: 28px; color: white; background: #1d4ed8; }
 .secondary-button { color: #1d4ed8; background: #eff6ff; }
+.board-toolbar { display: flex; align-items: end; justify-content: space-between; gap: 18px; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; background: white; }
+.board-toolbar label { margin-bottom: 7px; }
+select { min-width: 190px; border: 1px solid #cbd5e1; border-radius: 9px; padding: 11px 12px; color: #172554; background: white; }
+.toolbar-right, .legend { display: flex; align-items: center; gap: 16px; }
+.legend { flex-wrap: wrap; color: #475569; font-size: .8rem; }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.bed-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
+.bed-dot.disponible { background: #16a34a; }
+.bed-dot.ocupada { background: #64748b; }
+.bed-dot.bloqueada { background: #dc2626; }
+.updated-at { margin: 13px 0; color: #64748b; font-size: .78rem; text-align: right; }
+.floor-section { margin-top: 30px; }
+.floor-heading { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+.floor-heading h3 { margin: 0; color: #172554; font-size: 1.25rem; }
+.floor-heading span { color: #64748b; font-size: .82rem; }
+.rooms-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; }
+.room-card { border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; background: white; }
+.room-card h4 { margin: 0 0 15px; color: #334155; }
+.beds-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.bed-card { display: grid; gap: 4px; border-left: 4px solid; border-radius: 8px; padding: 11px; background: #f8fafc; }
+.bed-card.disponible { border-color: #16a34a; }
+.bed-card.ocupada { border-color: #64748b; }
+.bed-card.bloqueada { border-color: #dc2626; background: #fff7f7; }
+.bed-number { color: #64748b; font-size: .76rem; }
+.bed-card strong { color: #172554; font-size: .86rem; }
+.block-reason { color: #991b1b; font-size: .72rem; line-height: 1.3; }
+.empty-state { display: grid; justify-items: center; gap: 8px; border: 1px dashed #cbd5e1; border-radius: 14px; margin-top: 24px; padding: 46px 20px; color: #64748b; text-align: center; }
+.empty-state strong { color: #334155; }
+.loader { width: 20px; height: 20px; border: 3px solid #dbeafe; border-top-color: #2563eb; border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 .lookup-form { display: flex; align-items: end; gap: 14px; }
 .lookup-form .primary-button { flex: 0 0 auto; }
 .alert { border-radius: 10px; margin-bottom: 18px; padding: 13px 16px; font-size: .9rem; }
@@ -82,4 +114,10 @@ th { color: #64748b; font-size: .72rem; text-transform: uppercase; letter-spacin
   .lookup-form { display: grid; }
   .lookup-form .primary-button { margin-top: 4px; }
   .section-heading { flex-direction: column; }
+  .header-actions { gap: 10px; }
+  .header-link { font-size: .75rem; }
+  .board-toolbar, .toolbar-right { align-items: stretch; flex-direction: column; }
+  select { width: 100%; }
+  .toolbar-right .secondary-button { width: 100%; }
+  .legend { justify-content: space-between; }
 }
