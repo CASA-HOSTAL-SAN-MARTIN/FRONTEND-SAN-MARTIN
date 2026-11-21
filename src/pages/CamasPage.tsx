@@ -117,6 +117,8 @@ export function CamasPage() {
         </div>
         <div className="header-actions">
           <Link className="header-link" to="/">Solicitudes</Link>
+          <Link className="header-link" to="/aspirantes">Aspirantes</Link>
+          <span className="header-page active">Estado de camas</span>
           <span className="header-mark">CS</span>
         </div>
       </header>

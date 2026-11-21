@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Asignacion, Cama, Solicitud, SolicitudPayload } from '../types';
+import type { Asignacion, Aspirante, AspirantePayload, Cama, Solicitud, SolicitudPayload } from '../types';
 import type { Contrato, ContratoPayload } from '../types/contratos';
 
 export const apiClient = axios.create({
@@ -67,34 +67,21 @@ export async function updateContrato(id: string, payload: ContratoPayload, docum
     contratoRequestBody(payload, documento),
   );
   return data;
-}import axios from 'axios';
-import type { Asignacion, Cama, Solicitud, SolicitudPayload } from '../types';
+}
 
-export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000',
-});
-
-export async function createSolicitud(payload: SolicitudPayload) {
-  const { data } = await apiClient.post<Solicitud>('/api/solicitudes', payload);
+export async function createAspirante(payload: AspirantePayload) {
+  const { data } = await apiClient.post<Aspirante>('/api/aspirantes', payload);
   return data;
 }
 
-export async function getSolicitud(id: string) {
-  const { data } = await apiClient.get<Solicitud>(`/api/solicitudes/${encodeURIComponent(id)}`);
+export async function getAspirante(id: string) {
+  const { data } = await apiClient.get<Aspirante>(`/api/aspirantes/${encodeURIComponent(id)}`);
   return data;
 }
 
-export async function getSolicitudes() {
-  const { data } = await apiClient.get<Solicitud[]>('/api/solicitudes');
+export async function updateAspirante(id: string, payload: AspirantePayload) {
+  const { data } = await apiClient.put<Aspirante>(`/api/aspirantes/${encodeURIComponent(id)}`, payload);
   return data;
 }
 
-export async function getCamas() {
-  const { data } = await apiClient.get<Cama[]>('/api/camas');
-  return data;
-}
 
-export async function createAsignacion(payload: { estudianteId: string; camaId: string }) {
-  const { data } = await apiClient.post<Asignacion>('/api/asignaciones', payload);
-  return data;
-}
