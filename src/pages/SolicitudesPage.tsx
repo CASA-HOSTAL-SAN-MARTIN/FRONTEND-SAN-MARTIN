@@ -113,6 +113,7 @@ export function SolicitudesPage() {
           <Link className="header-link" to="/camas">Estado de camas <span aria-hidden="true">▰</span></Link>
           {canManageContracts && <Link className="header-link" to="/contratos">Contratos</Link>}
           <Link className="header-link" to="/pagos">Pagos</Link>
+          <Link className="header-link" to="/estado-cuenta">Estado de Cuenta</Link>
           <span className="topbar-divider" />
           <span className="header-mark">CS</span>
         </div>

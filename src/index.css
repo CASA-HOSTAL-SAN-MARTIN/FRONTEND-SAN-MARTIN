@@ -1021,3 +1021,455 @@ textarea:focus {
     flex-direction: column;
   }
 }
+
+
+/* ==========================================================================
+   ESTILOS: ESTADO DE CUENTA, SALDOS PENDIENTES Y MORA (ISSUE-9)
+   ========================================================================== */
+
+.cartera-page {
+  max-width: 1240px;
+}
+
+.cartera-hero {
+  margin: 40px 0 28px;
+  max-width: 820px;
+}
+
+.cartera-hero h2 {
+  margin: 10px 0 12px;
+  color: #172554;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.cartera-hero p:not(.eyebrow) {
+  color: #475569;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+/* KPIs de Cartera */
+.cartera-kpis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.cartera-kpi-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 20px 22px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(23, 37, 84, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cartera-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(23, 37, 84, 0.08);
+}
+
+.cartera-kpi-card .kpi-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cartera-kpi-card .kpi-value {
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.cartera-kpi-card .kpi-subtext {
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.cartera-tabs {
+  margin-bottom: 26px;
+}
+
+.cartera-card {
+  margin: 0 auto 40px;
+}
+
+.cartera-list-section {
+  width: 100%;
+}
+
+.cartera-filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(23, 37, 84, 0.04);
+}
+
+.cartera-search-field {
+  flex: 1 1 280px;
+  display: grid;
+  gap: 6px;
+}
+
+.cartera-search-field span,
+.cartera-filter-group label span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.cartera-filter-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cartera-table-container {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(23, 37, 84, 0.06);
+  overflow: hidden;
+}
+
+.cartera-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.cartera-table th {
+  padding: 14px 16px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cartera-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.88rem;
+  vertical-align: middle;
+}
+
+.cartera-table tr:hover td {
+  background: #f8fafc;
+}
+
+.resident-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.room-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  background: #f1f5f9;
+  color: #334155;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.mora-days-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.mora-days-badge.mora-danger {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.mora-days-badge.mora-ok {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.estado-mora-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.estado-mora-badge.status-al_dia {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.estado-mora-badge.status-pendiente {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.estado-mora-badge.status-en_mora {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.estado-mora-badge.status-acuerdo_pago {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.estado-mora-badge.status-becado {
+  background: #f3e8ff;
+  color: #7e22ce;
+}
+
+.estado-mora-badge.large {
+  font-size: 0.9rem;
+  padding: 6px 14px;
+}
+
+.obligacion-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.obligacion-badge.status-pagado {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.obligacion-badge.status-parcial {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.obligacion-badge.status-pendiente {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.obligacion-badge.status-vencido {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.cartera-actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.action-btn-statement {
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: #1e3a8a;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.action-btn-statement:hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.action-btn-agreement {
+  border: 0;
+  background: #1d4ed8;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.action-btn-agreement:hover {
+  background: #1e40af;
+}
+
+/* Extracto Individual */
+.extracto-individual-box {
+  background: #fbfcfe;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 16px;
+}
+
+.extracto-header-banner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 18px;
+  margin-bottom: 20px;
+}
+
+.extracto-header-banner h4 {
+  margin: 4px 0 2px;
+  font-size: 1.35rem;
+  color: #172554;
+}
+
+.extracto-status-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.mora-warning-text {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #b91c1c;
+}
+
+.extracto-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  padding: 16px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.extracto-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.extracto-metric span {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.extracto-metric strong {
+  font-size: 1.15rem;
+}
+
+.section-subtitle {
+  margin: 0 0 8px;
+  color: #1e3a8a;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.obligaciones-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.obligaciones-table th {
+  padding: 10px 12px;
+  background: #f1f5f9;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  color: #475569;
+}
+
+.obligaciones-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.84rem;
+}
+
+.extracto-footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+
+.payment-redirect-button {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0;
+}
+
+/* Modales de Estado de Cuenta */
+.extracto-modal {
+  width: min(840px, 100%);
+}
+
+.extracto-modal-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 14px;
+  background: #f8fafc;
+  border-radius: 10px;
+}
+
+.acuerdo-modal {
+  width: min(560px, 100%);
+}
+
+.agreement-notes {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #475569;
+  max-width: 280px;
+}
+
+.cartera-alert {
+  margin-bottom: 20px;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .printable-extracto, .printable-extracto * {
+    visibility: visible;
+  }
+  .printable-extracto {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .extracto-header-banner {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .extracto-status-box {
+    align-items: flex-start;
+  }
+  .extracto-modal-summary {
+    grid-template-columns: 1fr;
+  }
+}
