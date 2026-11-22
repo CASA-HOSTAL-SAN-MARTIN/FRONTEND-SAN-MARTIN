@@ -49,3 +49,5 @@ export type Asignacion = {
 
 export * from './contratos';
 export * from './pagos';
+export * from './lista-espera';
+export * from './aspirantes';

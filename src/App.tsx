@@ -5,11 +5,15 @@ import { SolicitudesPage } from './pages/SolicitudesPage';
 import { CamasPage } from './pages/CamasPage';
 import { ContratosPage } from './pages/ContratosPage';
 import { PagosPage } from './pages/PagosPage';
+import { ListaEsperaPage } from './pages/ListaEsperaPage';
+import { AspirantesPage } from './pages/AspirantesPage';
 
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<SolicitudesPage />} />
+      <Route path="/lista-espera" element={<ListaEsperaPage />} />
+      <Route path="/aspirantes" element={<AspirantesPage />} />
       <Route path="/camas" element={<CamasPage />} />
       <Route path="/contratos" element={<ContratosPage />} />
       <Route path="/pagos" element={<PagosPage />} />

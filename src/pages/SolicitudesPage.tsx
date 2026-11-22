@@ -110,6 +110,8 @@ export function SolicitudesPage() {
         <div className="header-actions">
           <span className="topbar-divider" />
           <span className="header-page active"><span aria-hidden="true">⌂</span> Solicitud de cupo</span>
+          <Link className="header-link" to="/lista-espera">Lista de espera</Link>
+          <Link className="header-link" to="/aspirantes">Aspirantes</Link>
           <Link className="header-link" to="/camas">Estado de camas <span aria-hidden="true">▰</span></Link>
           {canManageContracts && <Link className="header-link" to="/contratos">Contratos</Link>}
           <Link className="header-link" to="/pagos">Pagos</Link>
@@ -194,4 +196,4 @@ export function SolicitudesPage() {
       <footer className="site-footer">Casa Estudiantil San Martín <span>•</span> Apoyo, bienestar y educación</footer>
     </main>
   );
-              }
+}
