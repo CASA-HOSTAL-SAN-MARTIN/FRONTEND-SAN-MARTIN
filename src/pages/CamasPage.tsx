@@ -117,6 +117,8 @@ export function CamasPage() {
         </div>
         <div className="header-actions">
           <Link className="header-link" to="/">Solicitudes</Link>
+          <Link className="header-link" to="/contratos">Contratos</Link>
+          <Link className="header-link" to="/pagos">Pagos</Link>
           <span className="header-mark">CS</span>
         </div>
       </header>
