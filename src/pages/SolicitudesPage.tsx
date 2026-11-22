@@ -195,4 +195,3 @@ export function SolicitudesPage() {
     </main>
   );
 }
-

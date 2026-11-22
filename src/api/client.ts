@@ -83,5 +83,3 @@ export async function updateAspirante(id: string, payload: AspirantePayload) {
   const { data } = await apiClient.put<Aspirante>(`/api/aspirantes/${encodeURIComponent(id)}`, payload);
   return data;
 }
-
-
