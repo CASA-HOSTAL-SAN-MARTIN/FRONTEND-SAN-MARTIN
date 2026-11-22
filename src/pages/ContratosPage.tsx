@@ -244,6 +244,7 @@ export function ContratosPage() {
           <Link className="header-link" to="/aspirantes">Aspirantes</Link>
           <Link className="header-link" to="/camas">Estado de camas</Link>
           <span className="header-page active">Contratos</span>
+          <Link className="header-link" to="/pagos">Pagos</Link>
           <span className="header-mark">CS</span>
         </div>
       </header>

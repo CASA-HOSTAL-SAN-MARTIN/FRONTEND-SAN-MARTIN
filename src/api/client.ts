@@ -11,6 +11,7 @@ import type {
   UpdateEntradaListaEsperaPayload,
 } from '../types';
 import type { Contrato, ContratoPayload } from '../types/contratos';
+import type { EstadoPago, Pago, PagoPayload, TipoPago } from '../types/pagos';
 
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000',
@@ -79,6 +80,61 @@ export async function updateContrato(id: string, payload: ContratoPayload, docum
   return data;
 }
 
+function pagoRequestBody(payload: PagoPayload, comprobante?: File) {
+  if (!comprobante) return payload;
+
+  const formData = new FormData();
+  formData.append('tipoPago', payload.tipoPago);
+  formData.append('residenteNombre', payload.residenteNombre);
+  formData.append('numeroDocumento', payload.numeroDocumento);
+  if (payload.residenteId) formData.append('residenteId', payload.residenteId);
+  if (payload.contratoId) formData.append('contratoId', payload.contratoId);
+  formData.append('monto', String(payload.monto));
+  formData.append('fechaPago', payload.fechaPago);
+  if (payload.periodo) formData.append('periodo', payload.periodo);
+  formData.append('metodoPago', payload.metodoPago);
+  formData.append('referencia', payload.referencia);
+  if (payload.bancoEntidad) formData.append('bancoEntidad', payload.bancoEntidad);
+  if (payload.observaciones) formData.append('observaciones', payload.observaciones);
+  formData.append('comprobante', comprobante);
+  return formData;
+}
+
+export async function getPagos(params?: { tipoPago?: TipoPago; estado?: EstadoPago; numeroDocumento?: string }) {
+  const { data } = await apiClient.get<Pago[] | { data?: Pago[] }>('/api/pagos', { params });
+  if (Array.isArray(data)) return data;
+  return Array.isArray(data.data) ? data.data : [];
+}
+
+export async function getPago(id: string) {
+  const { data } = await apiClient.get<Pago>(`/api/pagos/${encodeURIComponent(id)}`);
+  return data;
+}
+
+export async function createPago(payload: PagoPayload, comprobante?: File) {
+  const { data } = await apiClient.post<Pago>(
+    '/api/pagos',
+    pagoRequestBody(payload, comprobante),
+  );
+  return data;
+}
+
+export async function verificarPago(id: string, verificadoPor?: string) {
+  const { data } = await apiClient.patch<Pago>(
+    `/api/pagos/${encodeURIComponent(id)}/verificar`,
+    { verificadoPor },
+  );
+  return data;
+}
+
+export async function rechazarPago(id: string, motivo: string, verificadoPor?: string) {
+  const { data } = await apiClient.patch<Pago>(
+    `/api/pagos/${encodeURIComponent(id)}/rechazar`,
+    { motivo, verificadoPor },
+  );
+  return data;
+}
+
 export async function getListaEspera() {
   const { data } = await apiClient.get<EntradaListaEspera[]>('/api/lista-espera');
   return data;
@@ -113,4 +169,3 @@ export async function updateAspirante(id: string, payload: AspirantePayload) {
   const { data } = await apiClient.put<Aspirante>(`/api/aspirantes/${encodeURIComponent(id)}`, payload);
   return data;
 }
-
