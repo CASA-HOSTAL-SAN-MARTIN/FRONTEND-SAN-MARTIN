@@ -313,6 +313,7 @@ export function PagosPage() {
           <Link className="header-link" to="/camas">Estado de camas</Link>
           <Link className="header-link" to="/contratos">Contratos</Link>
           <span className="header-page active">Pagos y Depósitos</span>
+          <Link className="header-link" to="/estado-cuenta">Estado de Cuenta</Link>
           <span className="header-mark">PG</span>
         </div>
       </header>

@@ -135,6 +135,38 @@ export async function rechazarPago(id: string, motivo: string, verificadoPor?: s
   return data;
 }
 
+export async function getEstadosCuenta(params?: { estadoMora?: import('../types/estado-cuenta').EstadoMora; search?: string }) {
+  const { data } = await apiClient.get<import('../types/estado-cuenta').EstadoCuentaResidente[] | { data?: import('../types/estado-cuenta').EstadoCuentaResidente[] }>('/api/estados-cuenta', { params });
+  if (Array.isArray(data)) return data;
+  return Array.isArray(data.data) ? data.data : [];
+}
+
+export async function getEstadoCuentaByDocumento(numeroDocumento: string) {
+  const { data } = await apiClient.get<import('../types/estado-cuenta').EstadoCuentaResidente>(`/api/estados-cuenta/documento/${encodeURIComponent(numeroDocumento)}`);
+  return data;
+}
+
+export async function getEstadoCuenta(id: string) {
+  const { data } = await apiClient.get<import('../types/estado-cuenta').EstadoCuentaResidente>(`/api/estados-cuenta/${encodeURIComponent(id)}`);
+  return data;
+}
+
+export async function registrarAcuerdoPago(
+  residenteId: string,
+  payload: { fechaCompromiso: string; montoCompromiso: number; observaciones: string; registradoPor?: string }
+) {
+  const { data } = await apiClient.post<import('../types/estado-cuenta').AcuerdoPago>(
+    `/api/estados-cuenta/${encodeURIComponent(residenteId)}/acuerdos-pago`,
+    payload
+  );
+  return data;
+}
+
+export async function getResumenCartera() {
+  const { data } = await apiClient.get<import('../types/estado-cuenta').ResumenCartera>('/api/estados-cuenta/resumen-cartera');
+  return data;
+}
+
 export async function getListaEspera() {
   const { data } = await apiClient.get<EntradaListaEspera[]>('/api/lista-espera');
   return data;

@@ -121,6 +121,7 @@ export function CamasPage() {
           <Link className="header-link" to="/aspirantes">Aspirantes</Link>
           <Link className="header-link" to="/contratos">Contratos</Link>
           <Link className="header-link" to="/pagos">Pagos</Link>
+          <Link className="header-link" to="/estado-cuenta">Estado de Cuenta</Link>
           <span className="header-page active">Estado de camas</span>
           <span className="header-mark">CS</span>
         </div>
