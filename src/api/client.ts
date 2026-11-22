@@ -17,6 +17,16 @@ export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000',
 });
 
+apiClient.interceptors.request.use((config) => {
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
+});
+
 export async function createSolicitud(payload: SolicitudPayload) {
   const { data } = await apiClient.post<Solicitud>('/api/solicitudes', payload);
   return data;
@@ -166,6 +176,28 @@ export async function getResumenCartera() {
   const { data } = await apiClient.get<import('../types/estado-cuenta').ResumenCartera>('/api/estados-cuenta/resumen-cartera');
   return data;
 }
+
+// --- Autenticación (Feature/Issue-6) ---
+
+export async function login(credentials: import('../types/auth').LoginCredentials): Promise<import('../types/auth').AuthResponse> {
+  const { data } = await apiClient.post<import('../types/auth').AuthResponse>('/api/auth/login', credentials);
+  return data;
+}
+
+export async function logout(): Promise<void> {
+  try {
+    await apiClient.post('/api/auth/logout');
+  } catch {
+    // Si la API falla o está offline, el logout local continúa
+  }
+}
+
+export async function getPerfil(): Promise<import('../types/auth').User> {
+  const { data } = await apiClient.get<import('../types/auth').User>('/api/auth/perfil');
+  return data;
+}
+
+// --- Lista de espera y aspirantes (main) ---
 
 export async function getListaEspera() {
   const { data } = await apiClient.get<EntradaListaEspera[]>('/api/lista-espera');

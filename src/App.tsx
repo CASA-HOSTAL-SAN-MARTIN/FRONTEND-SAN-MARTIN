@@ -1,4 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './auth/AuthContext';
+import { ProtectedRoute } from './auth/ProtectedRoute';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { SolicitudesPage } from './pages/SolicitudesPage';
@@ -11,16 +13,58 @@ import { AspirantesPage } from './pages/AspirantesPage';
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<SolicitudesPage />} />
-      <Route path="/lista-espera" element={<ListaEsperaPage />} />
-      <Route path="/aspirantes" element={<AspirantesPage />} />
-      <Route path="/camas" element={<CamasPage />} />
-      <Route path="/contratos" element={<ContratosPage />} />
-      <Route path="/pagos" element={<PagosPage />} />
-      <Route path="/estado-cuenta" element={<EstadoCuentaPage />} />
-      <Route path="/inicio" element={<HomePage />} />
-      <Route path="/login" element={<LoginPage />} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<SolicitudesPage />} />
+        <Route path="/lista-espera" element={<ListaEsperaPage />} />
+        <Route path="/aspirantes" element={<AspirantesPage />} />
+
+        <Route
+          path="/camas"
+          element={
+            <ProtectedRoute
+              allowedRoles={[
+                'ADMIN_SISTEMA',
+                'COORDINACION_BIENESTAR',
+                'ADMIN_FUNDACION',
+                'MONITORA',
+              ]}
+            >
+              <CamasPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/contratos"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN_SISTEMA', 'ADMIN_FUNDACION']}>
+              <ContratosPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/pagos"
+          element={
+            <ProtectedRoute>
+              <PagosPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/estado-cuenta"
+          element={
+            <ProtectedRoute>
+              <EstadoCuentaPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/inicio" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
+    </AuthProvider>
   );
 }
