@@ -1,5 +1,15 @@
 import axios from 'axios';
-import type { Asignacion, Cama, Solicitud, SolicitudPayload } from '../types';
+import type {
+  Asignacion,
+  Aspirante,
+  AspirantePayload,
+  Cama,
+  CreateEntradaListaEsperaPayload,
+  EntradaListaEspera,
+  Solicitud,
+  SolicitudPayload,
+  UpdateEntradaListaEsperaPayload,
+} from '../types';
 import type { Contrato, ContratoPayload } from '../types/contratos';
 import type { EstadoPago, Pago, PagoPayload, TipoPago } from '../types/pagos';
 
@@ -154,5 +164,40 @@ export async function registrarAcuerdoPago(
 
 export async function getResumenCartera() {
   const { data } = await apiClient.get<import('../types/estado-cuenta').ResumenCartera>('/api/estados-cuenta/resumen-cartera');
+  return data;
+}
+
+export async function getListaEspera() {
+  const { data } = await apiClient.get<EntradaListaEspera[]>('/api/lista-espera');
+  return data;
+}
+
+export async function getEntradaListaEspera(id: string) {
+  const { data } = await apiClient.get<EntradaListaEspera>(`/api/lista-espera/${encodeURIComponent(id)}`);
+  return data;
+}
+
+export async function createEntradaListaEspera(payload: CreateEntradaListaEsperaPayload) {
+  const { data } = await apiClient.post<EntradaListaEspera>('/api/lista-espera', payload);
+  return data;
+}
+
+export async function updateEntradaListaEspera(id: string, payload: UpdateEntradaListaEsperaPayload) {
+  const { data } = await apiClient.patch<EntradaListaEspera>(`/api/lista-espera/${encodeURIComponent(id)}`, payload);
+  return data;
+}
+
+export async function createAspirante(payload: AspirantePayload) {
+  const { data } = await apiClient.post<Aspirante>('/api/aspirantes', payload);
+  return data;
+}
+
+export async function getAspirante(id: string) {
+  const { data } = await apiClient.get<Aspirante>(`/api/aspirantes/${encodeURIComponent(id)}`);
+  return data;
+}
+
+export async function updateAspirante(id: string, payload: AspirantePayload) {
+  const { data } = await apiClient.put<Aspirante>(`/api/aspirantes/${encodeURIComponent(id)}`, payload);
   return data;
 }
