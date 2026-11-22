@@ -48,4 +48,5 @@ export type Asignacion = {
 };
 
 export * from './lista-espera';
+export * from './aspirantes';
 

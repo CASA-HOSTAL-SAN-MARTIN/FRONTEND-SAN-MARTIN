@@ -1,6 +1,8 @@
 import axios from 'axios';
 import type {
   Asignacion,
+  Aspirante,
+  AspirantePayload,
   Cama,
   CreateEntradaListaEsperaPayload,
   EntradaListaEspera,
@@ -97,4 +99,18 @@ export async function updateEntradaListaEspera(id: string, payload: UpdateEntrad
   return data;
 }
 
+export async function createAspirante(payload: AspirantePayload) {
+  const { data } = await apiClient.post<Aspirante>('/api/aspirantes', payload);
+  return data;
+}
+
+export async function getAspirante(id: string) {
+  const { data } = await apiClient.get<Aspirante>(`/api/aspirantes/${encodeURIComponent(id)}`);
+  return data;
+}
+
+export async function updateAspirante(id: string, payload: AspirantePayload) {
+  const { data } = await apiClient.put<Aspirante>(`/api/aspirantes/${encodeURIComponent(id)}`, payload);
+  return data;
+}
 
