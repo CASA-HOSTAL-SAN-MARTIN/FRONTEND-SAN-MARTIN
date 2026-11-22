@@ -9,7 +9,12 @@ export type UserRole =
   | 'ASPIRANTE_RESIDENTE'
   | 'ACUDIENTE';
 
-export type SolicitudEstado = 'pendiente' | 'en_revision' | 'aprobada' | 'rechazada' | 'cancelada';
+export type SolicitudEstado =
+  | 'pendiente'
+  | 'en_revision'
+  | 'aprobada'
+  | 'rechazada'
+  | 'cancelada';
 
 export type SolicitudPayload = {
   nombres: string;
@@ -47,7 +52,10 @@ export type Asignacion = {
   realizadoPor?: string | null;
 };
 
+// ─── Re-exports de módulos ─────────────────────────────────────────
 export * from './contratos';
 export * from './pagos';
 export * from './estado-cuenta';
 export * from './auth';
+export * from './lista-espera';
+export * from './aspirantes';

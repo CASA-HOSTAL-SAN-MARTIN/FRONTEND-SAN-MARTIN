@@ -8,12 +8,17 @@ import { CamasPage } from './pages/CamasPage';
 import { ContratosPage } from './pages/ContratosPage';
 import { PagosPage } from './pages/PagosPage';
 import { EstadoCuentaPage } from './pages/EstadoCuentaPage';
+import { ListaEsperaPage } from './pages/ListaEsperaPage';
+import { AspirantesPage } from './pages/AspirantesPage';
 
 export default function App() {
   return (
     <AuthProvider>
       <Routes>
         <Route path="/" element={<SolicitudesPage />} />
+        <Route path="/lista-espera" element={<ListaEsperaPage />} />
+        <Route path="/aspirantes" element={<AspirantesPage />} />
+
         <Route
           path="/camas"
           element={
@@ -29,6 +34,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/contratos"
           element={
@@ -37,6 +43,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/pagos"
           element={
@@ -45,6 +52,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/estado-cuenta"
           element={
@@ -53,6 +61,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
         <Route path="/inicio" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
       </Routes>
