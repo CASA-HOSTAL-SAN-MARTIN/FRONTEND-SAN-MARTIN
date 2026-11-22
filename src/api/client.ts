@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Asignacion, Cama, Solicitud, SolicitudPayload } from '../types';
+import type { Asignacion, Aspirante, AspirantePayload, Cama, Solicitud, SolicitudPayload } from '../types';
 import type { Contrato, ContratoPayload } from '../types/contratos';
 
 export const apiClient = axios.create({
@@ -66,5 +66,20 @@ export async function updateContrato(id: string, payload: ContratoPayload, docum
     `/api/contratos/${encodeURIComponent(id)}`,
     contratoRequestBody(payload, documento),
   );
+  return data;
+}
+
+export async function createAspirante(payload: AspirantePayload) {
+  const { data } = await apiClient.post<Aspirante>('/api/aspirantes', payload);
+  return data;
+}
+
+export async function getAspirante(id: string) {
+  const { data } = await apiClient.get<Aspirante>(`/api/aspirantes/${encodeURIComponent(id)}`);
+  return data;
+}
+
+export async function updateAspirante(id: string, payload: AspirantePayload) {
+  const { data } = await apiClient.put<Aspirante>(`/api/aspirantes/${encodeURIComponent(id)}`, payload);
   return data;
 }
