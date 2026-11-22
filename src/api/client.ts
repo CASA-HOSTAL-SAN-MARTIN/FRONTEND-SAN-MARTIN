@@ -1,5 +1,15 @@
 import axios from 'axios';
-import type { Asignacion, Cama, Solicitud, SolicitudPayload } from '../types';
+import type {
+  Asignacion,
+  Aspirante,
+  AspirantePayload,
+  Cama,
+  CreateEntradaListaEsperaPayload,
+  EntradaListaEspera,
+  Solicitud,
+  SolicitudPayload,
+  UpdateEntradaListaEsperaPayload,
+} from '../types';
 import type { Contrato, ContratoPayload } from '../types/contratos';
 import type { EstadoPago, Pago, PagoPayload, TipoPago } from '../types/pagos';
 
@@ -167,6 +177,8 @@ export async function getResumenCartera() {
   return data;
 }
 
+// --- Autenticación (Feature/Issue-6) ---
+
 export async function login(credentials: import('../types/auth').LoginCredentials): Promise<import('../types/auth').AuthResponse> {
   const { data } = await apiClient.post<import('../types/auth').AuthResponse>('/api/auth/login', credentials);
   return data;
@@ -182,5 +194,42 @@ export async function logout(): Promise<void> {
 
 export async function getPerfil(): Promise<import('../types/auth').User> {
   const { data } = await apiClient.get<import('../types/auth').User>('/api/auth/perfil');
+  return data;
+}
+
+// --- Lista de espera y aspirantes (main) ---
+
+export async function getListaEspera() {
+  const { data } = await apiClient.get<EntradaListaEspera[]>('/api/lista-espera');
+  return data;
+}
+
+export async function getEntradaListaEspera(id: string) {
+  const { data } = await apiClient.get<EntradaListaEspera>(`/api/lista-espera/${encodeURIComponent(id)}`);
+  return data;
+}
+
+export async function createEntradaListaEspera(payload: CreateEntradaListaEsperaPayload) {
+  const { data } = await apiClient.post<EntradaListaEspera>('/api/lista-espera', payload);
+  return data;
+}
+
+export async function updateEntradaListaEspera(id: string, payload: UpdateEntradaListaEsperaPayload) {
+  const { data } = await apiClient.patch<EntradaListaEspera>(`/api/lista-espera/${encodeURIComponent(id)}`, payload);
+  return data;
+}
+
+export async function createAspirante(payload: AspirantePayload) {
+  const { data } = await apiClient.post<Aspirante>('/api/aspirantes', payload);
+  return data;
+}
+
+export async function getAspirante(id: string) {
+  const { data } = await apiClient.get<Aspirante>(`/api/aspirantes/${encodeURIComponent(id)}`);
+  return data;
+}
+
+export async function updateAspirante(id: string, payload: AspirantePayload) {
+  const { data } = await apiClient.put<Aspirante>(`/api/aspirantes/${encodeURIComponent(id)}`, payload);
   return data;
 }
