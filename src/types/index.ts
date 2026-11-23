@@ -47,7 +47,9 @@ export type Asignacion = {
   realizadoPor?: string | null;
 };
 
+export * from './aspirantes';
 export * from './contratos';
 export * from './pagos';
 export * from './estado-cuenta';
 export * from './auth';
+export * from './lista-espera';
