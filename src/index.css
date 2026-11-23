@@ -100,6 +100,19 @@ code { border-radius: 5px; padding: 4px 7px; color: #1e3a8a; background: #dbeafe
 .locked { color: #475569; background: #f8fafc; }
 .locked strong { color: #172554; }
 .locked p { margin-bottom: 0; line-height: 1.5; }
+.assignment-card { border: 1px solid #bfdbfe; border-radius: 16px; margin-top: 24px; padding: 22px; background: #f8fbff; }
+.assignment-card .section-heading { margin-bottom: 18px; }
+.assignment-form { display: grid; grid-template-columns: 1fr 1.2fr auto; align-items: end; gap: 14px; }
+.assignment-form .primary-button { margin-top: 0; }
+.assignment-locked { margin-top: 24px; }
+.assignment-success { display: grid; gap: 5px; border-radius: 10px; margin-top: 18px; padding: 14px; color: #166534; background: #f0fdf4; font-size: .86rem; }
+.assignment-success strong { color: #14532d; }
+.modal-backdrop { position: fixed; z-index: 10; inset: 0; display: grid; place-items: center; padding: 20px; background: #17255466; }
+.confirmation-modal { width: min(100%, 470px); border-radius: 16px; padding: 28px; background: white; box-shadow: 0 20px 50px #17255433; }
+.confirmation-modal h3 { margin: 6px 0 10px; color: #172554; }
+.confirmation-modal p:not(.eyebrow) { color: #64748b; line-height: 1.5; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+.modal-actions .primary-button { margin-top: 0; }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; min-width: 720px; text-align: left; }
 th, td { border-bottom: 1px solid #e2e8f0; padding: 14px 10px; color: #475569; font-size: .85rem; }
@@ -120,4 +133,8 @@ th { color: #64748b; font-size: .72rem; text-transform: uppercase; letter-spacin
   select { width: 100%; }
   .toolbar-right .secondary-button { width: 100%; }
   .legend { justify-content: space-between; }
+  .assignment-form { grid-template-columns: 1fr; }
+  .assignment-form .primary-button { width: 100%; }
+  .modal-actions { flex-direction: column-reverse; }
+  .modal-actions button { width: 100%; }
 }
