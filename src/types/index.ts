@@ -38,3 +38,16 @@ export type Cama = {
   estado: CamaEstado;
   motivoBloqueo?: string | null;
 };
+
+export type Asignacion = {
+  id: string;
+  estudianteId: string;
+  camaId: string;
+  cama?: Cama;
+  realizadoPor?: string | null;
+};
+
+export * from './contratos';
+export * from './pagos';
+export * from './estado-cuenta';
+export * from './auth';
