@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
-import { LoginPage } from './pages/LoginPage';
 import { SolicitudesPage } from './pages/SolicitudesPage';
 import { CamasPage } from './pages/CamasPage';
 import { ContratosPage } from './pages/ContratosPage';
@@ -16,7 +15,6 @@ export default function App() {
       <Route path="/aspirantes" element={<AspirantesPage />} />
       <Route path="/lista-espera" element={<ListaEsperaPage />} />
       <Route path="/inicio" element={<HomePage />} />
-      <Route path="/login" element={<LoginPage />} />
     </Routes>
   );
 }

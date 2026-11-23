@@ -9,7 +9,6 @@ import type {
   SolicitudPayload,
 } from '../types';
 import type { Contrato, ContratoPayload } from '../types/contratos';
-import type { LoginCredentials, AuthResponse } from '../types/auth';
 
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000',
@@ -114,11 +113,3 @@ export async function updateEntradaListaEspera(id: string, payload: Partial<Entr
   return data;
 }
 
-export async function login(credentials: LoginCredentials) {
-  const { data } = await apiClient.post<AuthResponse>('/api/auth/login', credentials);
-  return data;
-}
-
-export async function logout(): Promise<void> {
-  await apiClient.post('/api/auth/logout');
-}
