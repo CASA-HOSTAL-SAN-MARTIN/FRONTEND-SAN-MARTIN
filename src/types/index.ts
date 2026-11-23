@@ -46,3 +46,7 @@ export type Asignacion = {
   cama?: Cama;
   realizadoPor?: string | null;
 };
+
+export * from './aspirantes';
+export * from './contratos';
+export * from './lista-espera';
