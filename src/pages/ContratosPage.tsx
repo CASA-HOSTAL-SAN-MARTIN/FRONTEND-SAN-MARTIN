@@ -240,7 +240,7 @@ export function ContratosPage() {
         </Link>
         <div className="header-actions">
           <Link className="header-link" to="/">Solicitudes</Link>
-          <Link className="header-link" to="/aspirantes">Aspirantes</Link>
+          <Link className="header-link" to="/lista-espera">Lista de espera</Link>
           <Link className="header-link" to="/camas">Estado de camas</Link>
           <span className="header-page active">Contratos</span>
           <span className="header-mark">CS</span>
