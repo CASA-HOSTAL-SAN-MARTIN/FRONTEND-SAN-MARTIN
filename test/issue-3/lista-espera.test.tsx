@@ -12,6 +12,12 @@ vi.mock('../../src/api/client', () => ({
   updateEntradaListaEspera: vi.fn(),
 }));
 
+vi.mock('../../src/auth/useAuth', () => ({
+  useAuth: () => ({
+    user: localStorage.getItem('userRole') ? { roles: [localStorage.getItem('userRole')] } : null,
+  }),
+}));
+
 const mockEntries: EntradaListaEspera[] = [
   {
     id: 'entry-1',

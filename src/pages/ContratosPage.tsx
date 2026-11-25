@@ -7,6 +7,7 @@ import { ErrorAlert } from '../components/ui/ErrorAlert';
 import { Spinner } from '../components/ui/Spinner';
 import type { Contrato, ContratoPayload, ResidenteContrato } from '../types/contratos';
 import type { UserRole } from '../types';
+import { useAuth } from '../auth/useAuth';
 
 type ContractForm = {
   nombres: string;
@@ -93,8 +94,8 @@ function statusClass(status?: string | null) {
 }
 
 export function ContratosPage() {
-  const role = localStorage.getItem('userRole') as UserRole | null;
-  const canManage = role !== null && authorizedRoles.includes(role);
+  const { user } = useAuth();
+  const canManage = user?.roles.some((role) => authorizedRoles.includes(role)) ?? false;
   const [contracts, setContracts] = useState<Contrato[]>([]);
   const [form, setForm] = useState(initialForm);
   const [documentFile, setDocumentFile] = useState<File | undefined>();
