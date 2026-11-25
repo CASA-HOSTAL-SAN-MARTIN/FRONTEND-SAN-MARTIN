@@ -11,6 +11,12 @@ vi.mock('../../src/api/client', () => ({
   updateAspirante: vi.fn(),
 }));
 
+vi.mock('../../src/auth/useAuth', () => ({
+  useAuth: () => ({
+    user: localStorage.getItem('userRole') ? { roles: [localStorage.getItem('userRole')] } : null,
+  }),
+}));
+
 const mockAspiranteMenor: Aspirante = {
   id: 'd9b1c7a4-3fa0-48e2-9b21-123456789abc',
   nombreCompleto: 'Carlos Rodríguez',

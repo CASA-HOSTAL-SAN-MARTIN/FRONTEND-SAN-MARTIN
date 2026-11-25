@@ -9,6 +9,12 @@ vi.mock('../../src/api/client', () => ({
   getCamas: vi.fn(),
 }));
 
+vi.mock('../../src/auth/useAuth', () => ({
+  useAuth: () => ({
+    user: localStorage.getItem('userRole') ? { roles: [localStorage.getItem('userRole')] } : null,
+  }),
+}));
+
 const camas = [
   { id: 'bed-available', piso: 1, habitacion: '101', numero: 'A', estado: 'disponible' as const },
   { id: 'bed-occupied', piso: 1, habitacion: '101', numero: 'B', estado: 'ocupada' as const },

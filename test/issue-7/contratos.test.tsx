@@ -12,6 +12,12 @@ vi.mock('../../src/api/client', () => ({
   updateContrato: vi.fn(),
 }));
 
+vi.mock('../../src/auth/useAuth', () => ({
+  useAuth: () => ({
+    user: localStorage.getItem('userRole') ? { roles: [localStorage.getItem('userRole')] } : null,
+  }),
+}));
+
 const contrato: Contrato = {
   id: 'contract-1',
   residente: {

@@ -5,6 +5,7 @@ import { createAsignacion, getCamas } from '../api/client';
 import { EmptyState } from '../components/ui/EmptyState';
 import { ErrorAlert } from '../components/ui/ErrorAlert';
 import { Spinner } from '../components/ui/Spinner';
+import { useAuth } from '../auth/useAuth';
 import type { Asignacion, Cama, CamaEstado, UserRole } from '../types';
 
 type PisoFilter = 'todos' | '1' | '2' | '3';
@@ -76,7 +77,8 @@ export function CamasPage() {
     [camas, selectedFloor],
   );
   const availableCamas = useMemo(() => camas.filter((cama) => cama.estado === 'disponible'), [camas]);
-  const canAssign = assignmentRoles.includes(localStorage.getItem('userRole') as UserRole);
+  const { user } = useAuth();
+  const canAssign = user?.roles.some((role) => assignmentRoles.includes(role)) ?? false;
   const floors = useMemo(() => [1, 2, 3].map((piso) => ({
     piso,
     rooms: groupByRoom(filteredCamas.filter((cama) => cama.piso === piso)),

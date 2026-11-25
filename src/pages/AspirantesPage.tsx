@@ -2,7 +2,8 @@ import { type FormEvent, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { createAspirante, getAspirante, updateAspirante } from '../api/client';
-import type { Aspirante, AspiranteAuditEntry, AspirantePayload, UserRole } from '../types';
+import { useAuth } from '../auth/useAuth';
+import type { Aspirante, AspiranteAuditEntry, AspirantePayload } from '../types';
 
 type AspiranteFormState = {
   nombreCompleto: string;
@@ -60,7 +61,8 @@ export function AspirantesPage() {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
 
-  const currentRole = localStorage.getItem('userRole') as UserRole | null;
+  const { user: authenticatedUser } = useAuth();
+  const currentRole = authenticatedUser?.roles[0] ?? null;
   const canManageContracts = currentRole === 'ADMIN_SISTEMA' || currentRole === 'ADMIN_FUNDACION';
 
   // Check draft on mount

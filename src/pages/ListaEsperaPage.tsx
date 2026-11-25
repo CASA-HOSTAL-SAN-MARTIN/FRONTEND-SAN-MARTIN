@@ -5,6 +5,7 @@ import { createEntradaListaEspera, getListaEspera, updateEntradaListaEspera } fr
 import { EmptyState } from '../components/ui/EmptyState';
 import { ErrorAlert } from '../components/ui/ErrorAlert';
 import { Spinner } from '../components/ui/Spinner';
+import { useAuth } from '../auth/useAuth';
 import type { EntradaListaEspera, EstadoListaEspera, UserRole } from '../types';
 
 const authorizedRoles: UserRole[] = ['ADMIN_SISTEMA', 'COORDINACION_BIENESTAR', 'ADMIN_FUNDACION'];
@@ -58,9 +59,9 @@ export function ListaEsperaPage() {
     nextStatus: EstadoListaEspera;
   } | null>(null);
 
-  const currentRole = localStorage.getItem('userRole') as UserRole | null;
-  const canManage = currentRole !== null && authorizedRoles.includes(currentRole);
-  const canManageContracts = currentRole === 'ADMIN_SISTEMA' || currentRole === 'ADMIN_FUNDACION';
+  const { user } = useAuth();
+  const canManage = user?.roles.some((role) => authorizedRoles.includes(role)) ?? false;
+  const canManageContracts = user?.roles.some((role) => role === 'ADMIN_SISTEMA' || role === 'ADMIN_FUNDACION') ?? false;
 
   const loadListaEspera = useCallback(async () => {
     setLoading(true);

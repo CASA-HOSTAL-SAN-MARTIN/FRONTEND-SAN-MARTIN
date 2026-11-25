@@ -8,6 +8,9 @@ import { ListaEsperaPage } from './pages/ListaEsperaPage';
 import { LoginPage } from './pages/LoginPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { MainLayout } from './layouts/MainLayout';
+import { ProtectedRoute } from './auth/ProtectedRoute';
+import { roleAccess } from './auth/roleAccess';
+import { RoleDashboard } from './pages/RoleDashboard';
 
 export default function App() {
   return (
@@ -15,10 +18,11 @@ export default function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/solicitar-cupo" element={<SolicitudesPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/camas" element={<MainLayout><CamasPage /></MainLayout>} />
-      <Route path="/contratos" element={<MainLayout><ContratosPage /></MainLayout>} />
-      <Route path="/aspirantes" element={<MainLayout><AspirantesPage /></MainLayout>} />
-      <Route path="/lista-espera" element={<MainLayout><ListaEsperaPage /></MainLayout>} />
+      <Route path="/panel" element={<ProtectedRoute><MainLayout><RoleDashboard /></MainLayout></ProtectedRoute>} />
+      <Route path="/camas" element={<ProtectedRoute roles={roleAccess.beds}><MainLayout><CamasPage /></MainLayout></ProtectedRoute>} />
+      <Route path="/contratos" element={<ProtectedRoute roles={roleAccess.contracts}><MainLayout><ContratosPage /></MainLayout></ProtectedRoute>} />
+      <Route path="/aspirantes" element={<ProtectedRoute roles={roleAccess.aspirants}><MainLayout><AspirantesPage /></MainLayout></ProtectedRoute>} />
+      <Route path="/lista-espera" element={<ProtectedRoute roles={roleAccess.waitlist}><MainLayout><ListaEsperaPage /></MainLayout></ProtectedRoute>} />
       <Route path="/inicio" element={<HomePage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

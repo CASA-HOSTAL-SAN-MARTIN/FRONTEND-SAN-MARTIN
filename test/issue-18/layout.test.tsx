@@ -7,6 +7,10 @@ import { ErrorAlert } from '../../src/components/ui/ErrorAlert';
 import { Spinner } from '../../src/components/ui/Spinner';
 import { MainLayout } from '../../src/layouts/MainLayout';
 
+vi.mock('../../src/auth/useAuth', () => ({
+  useAuth: () => ({ user: { roles: ['ADMIN_SISTEMA'] }, logout: vi.fn() }),
+}));
+
 describe('Issue 18: estructura, navegación y estados comunes', () => {
   it('muestra navegación de módulos y marca la ruta activa', () => {
     render(

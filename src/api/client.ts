@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { expireStoredSession, getStoredToken } from '../auth/authStorage';
 import type {
   Aspirante,
   AspirantePayload,
@@ -13,6 +14,22 @@ import type { Contrato, ContratoPayload } from '../types/contratos';
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000',
 });
+
+apiClient.interceptors.request.use((config) => {
+  const token = getStoredToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error: unknown) => {
+    if (axios.isAxiosError(error) && error.response?.status === 401 && getStoredToken()) {
+      expireStoredSession();
+    }
+    return Promise.reject(error);
+  },
+);
 
 export async function createSolicitud(payload: SolicitudPayload) {
   const { data } = await apiClient.post<Solicitud>('/api/solicitudes', payload);
