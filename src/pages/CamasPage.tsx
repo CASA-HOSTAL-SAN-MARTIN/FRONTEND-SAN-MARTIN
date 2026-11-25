@@ -2,6 +2,9 @@ import { type FormEvent, useCallback, useEffect, useMemo, useState } from 'react
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { createAsignacion, getCamas } from '../api/client';
+import { EmptyState } from '../components/ui/EmptyState';
+import { ErrorAlert } from '../components/ui/ErrorAlert';
+import { Spinner } from '../components/ui/Spinner';
 import type { Asignacion, Cama, CamaEstado, UserRole } from '../types';
 
 type PisoFilter = 'todos' | '1' | '2' | '3';
@@ -42,6 +45,7 @@ export function CamasPage() {
   const [selectedFloor, setSelectedFloor] = useState<PisoFilter>('todos');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [loadError, setLoadError] = useState('');
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [studentId, setStudentId] = useState('');
   const [selectedBedId, setSelectedBedId] = useState('');
@@ -51,13 +55,13 @@ export function CamasPage() {
 
   const loadCamas = useCallback(async () => {
     setLoading(true);
-    setError('');
+    setLoadError('');
     try {
       const data = await getCamas();
       setCamas(data.map((cama) => ({ ...cama, estado: normalizeState(cama.estado) })));
       setLastUpdated(new Date());
     } catch (requestError) {
-      setError(getApiError(requestError));
+      setLoadError(getApiError(requestError));
     } finally {
       setLoading(false);
     }
@@ -147,6 +151,7 @@ export function CamasPage() {
 
       {lastUpdated && !loading && <p className="updated-at">Última actualización: {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>}
       {error && <div className="alert error" role="alert">{error}</div>}
+      {loadError && <ErrorAlert message={loadError} onRetry={() => void loadCamas()} retrying={loading} />}
       {canAssign ? (
         <section className="assignment-card">
           <div className="section-heading">
@@ -167,9 +172,9 @@ export function CamasPage() {
           {assignment && <div className="assignment-success" role="status"><strong>Asignación confirmada</strong><span>Estudiante: {assignment.estudianteId}</span><span>Cama: {assignment.camaId}</span>{assignment.realizadoPor && <span>Realizada por: {assignment.realizadoPor}</span>}</div>}
         </section>
       ) : <div className="locked assignment-locked">La asignación de camas está disponible únicamente para personal autorizado.</div>}
-      {loading && <div className="empty-state"><span className="loader" />Cargando estado de camas...</div>}
-      {!loading && !error && filteredCamas.length === 0 && <div className="empty-state"><strong>No hay camas para mostrar</strong><span>Prueba con otro piso o actualiza la información.</span></div>}
-      {!loading && !error && floors.map(({ piso, rooms }) => (
+      {loading && <Spinner label="Cargando estado de camas..." />}
+      {!loading && !loadError && !error && filteredCamas.length === 0 && <EmptyState title="No hay camas para mostrar" description="Prueba con otro piso o actualiza la información." />}
+      {!loading && !loadError && !error && floors.map(({ piso, rooms }) => (
         <section className="floor-section" key={piso}>
           <div className="floor-heading"><h3>Piso {piso}</h3><span>{Object.keys(rooms).length} habitaciones</span></div>
           <div className="rooms-grid">

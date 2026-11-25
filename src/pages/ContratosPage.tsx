@@ -2,6 +2,9 @@ import { type FormEvent, useCallback, useEffect, useMemo, useState } from 'react
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { createContrato, getContrato, getContratos, updateContrato } from '../api/client';
+import { EmptyState } from '../components/ui/EmptyState';
+import { ErrorAlert } from '../components/ui/ErrorAlert';
+import { Spinner } from '../components/ui/Spinner';
 import type { Contrato, ContratoPayload, ResidenteContrato } from '../types/contratos';
 import type { UserRole } from '../types';
 
@@ -101,16 +104,17 @@ export function ContratosPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [loadError, setLoadError] = useState('');
   const [notice, setNotice] = useState('');
   const [search, setSearch] = useState('');
 
   const loadContracts = useCallback(async () => {
     setLoading(true);
-    setError('');
+    setLoadError('');
     try {
       setContracts(await getContratos());
     } catch (requestError) {
-      setError(getApiError(requestError));
+      setLoadError(getApiError(requestError));
     } finally {
       setLoading(false);
     }
@@ -238,12 +242,7 @@ export function ContratosPage() {
           <span className="brand-seal">SM</span>
           <span className="brand-name">CASA ESTUDIANTIL<strong>SAN MARTÍN</strong></span>
         </Link>
-        <div className="header-actions">
-          <Link className="header-link" to="/">Solicitudes</Link>
-          <Link className="header-link" to="/camas">Estado de camas</Link>
-          <span className="header-page active">Contratos</span>
-          <span className="header-mark">CS</span>
-        </div>
+        <div className="header-actions"><span className="header-mark">CS</span></div>
       </header>
 
       <section className="contract-hero">
@@ -257,6 +256,7 @@ export function ContratosPage() {
           {error || notice}
         </div>
       )}
+      {loadError && <ErrorAlert message={loadError} onRetry={() => void loadContracts()} retrying={loading} />}
 
       <section className="card contract-card" aria-labelledby="contract-form-title">
         <div className="section-heading">
@@ -330,14 +330,14 @@ export function ContratosPage() {
           <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Escribe para filtrar" />
         </label>
 
-        {loading && <div className="empty-state"><span className="loader" />Cargando contratos...</div>}
-        {!loading && !error && visibleContracts.length === 0 && (
-          <div className="empty-state">
-            <strong>{contracts.length ? 'No hay resultados' : 'Aún no hay contratos registrados'}</strong>
-            <span>{contracts.length ? 'Prueba con otro nombre, documento o estado.' : 'Los contratos aparecerán aquí cuando la API devuelva registros.'}</span>
-          </div>
+        {loading && <Spinner label="Cargando contratos..." />}
+        {!loading && !loadError && !error && visibleContracts.length === 0 && (
+          <EmptyState
+            title={contracts.length ? 'No hay resultados' : 'Aún no hay contratos registrados'}
+            description={contracts.length ? 'Prueba con otro nombre, documento o estado.' : 'Los contratos aparecerán aquí cuando la API devuelva registros.'}
+          />
         )}
-        {!loading && visibleContracts.length > 0 && (
+        {!loading && !loadError && !error && visibleContracts.length > 0 && (
           <div className="table-wrap contract-table-wrap">
             <table className="contract-table">
               <thead>

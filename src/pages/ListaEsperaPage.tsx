@@ -2,6 +2,9 @@ import { type FormEvent, useCallback, useEffect, useMemo, useState } from 'react
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { createEntradaListaEspera, getListaEspera, updateEntradaListaEspera } from '../api/client';
+import { EmptyState } from '../components/ui/EmptyState';
+import { ErrorAlert } from '../components/ui/ErrorAlert';
+import { Spinner } from '../components/ui/Spinner';
 import type { EntradaListaEspera, EstadoListaEspera, UserRole } from '../types';
 
 const authorizedRoles: UserRole[] = ['ADMIN_SISTEMA', 'COORDINACION_BIENESTAR', 'ADMIN_FUNDACION'];
@@ -32,6 +35,7 @@ export function ListaEsperaPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState('');
+  const [loadError, setLoadError] = useState('');
   const [notice, setNotice] = useState('');
 
   // Filters & Search
@@ -60,12 +64,12 @@ export function ListaEsperaPage() {
 
   const loadListaEspera = useCallback(async () => {
     setLoading(true);
-    setError('');
+    setLoadError('');
     try {
       const data = await getListaEspera();
       setEntries(Array.isArray(data) ? data : []);
     } catch (requestError) {
-      setError(getApiError(requestError));
+      setLoadError(getApiError(requestError));
     } finally {
       setLoading(false);
     }
@@ -225,6 +229,7 @@ export function ListaEsperaPage() {
           {error || notice}
         </div>
       )}
+      {loadError && <ErrorAlert message={loadError} onRetry={() => void loadListaEspera()} retrying={loading} />}
 
       <section className="card" style={{ display: 'block', marginBottom: '24px' }}>
         <div className="section-heading" style={{ flexWrap: 'wrap', gap: '12px' }}>
@@ -351,14 +356,9 @@ export function ListaEsperaPage() {
 
         {/* Content area: Loading, Empty or Table */}
         {loading ? (
-          <div className="empty-state">
-            <div className="loader" role="status" aria-label="Cargando lista de espera" />
-            <p>Cargando lista de espera unificada...</p>
-          </div>
-        ) : filteredEntries.length === 0 ? (
-          <div className="empty-state">
-            <p>No se encontraron aspirantes en la lista de espera con los criterios especificados.</p>
-          </div>
+          <Spinner label="Cargando lista de espera unificada..." />
+        ) : loadError ? null : filteredEntries.length === 0 ? (
+          <EmptyState title="No se encontraron aspirantes" description="Prueba con otros filtros o criterios de búsqueda." />
         ) : (
           <>
             <div className="table-wrap">
