@@ -1,7 +1,8 @@
 import { type FormEvent, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { createSolicitud, getSolicitud, getSolicitudes } from '../api/client';
-import type { Solicitud, SolicitudPayload, SolicitudEstado, UserRole } from '../types';
+import { createSolicitud, getSolicitud } from '../api/client';
+import type { Solicitud, SolicitudPayload, SolicitudEstado } from '../types';
 
 const initialForm: SolicitudPayload = {
   nombres: '',
@@ -13,7 +14,6 @@ const initialForm: SolicitudPayload = {
   universidad: '',
 };
 
-const authorizedRoles: UserRole[] = ['ADMIN_SISTEMA', 'COORDINACION_BIENESTAR', 'ADMIN_FUNDACION'];
 const roleLabels: Record<SolicitudEstado, string> = {
   pendiente: 'Pendiente',
   en_revision: 'En revisión',
@@ -36,18 +36,14 @@ function StatusBadge({ status }: { status: SolicitudEstado }) {
 }
 
 export function SolicitudesPage() {
-  const [activeTab, setActiveTab] = useState<'create' | 'lookup' | 'admin'>('create');
+  const [activeTab, setActiveTab] = useState<'create' | 'lookup'>('create');
   const [form, setForm] = useState(initialForm);
   const [created, setCreated] = useState<Solicitud | null>(null);
   const [result, setResult] = useState<Solicitud | null>(null);
-  const [requests, setRequests] = useState<Solicitud[]>([]);
   const [lookupId, setLookupId] = useState('');
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const currentRole = localStorage.getItem('userRole') as UserRole | null;
-  const canViewAll = currentRole !== null && authorizedRoles.includes(currentRole);
 
   function updateField(field: keyof SolicitudPayload, value: string) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -86,17 +82,6 @@ export function SolicitudesPage() {
     }
   }
 
-  async function handleLoadRequests() {
-    setError('');
-    setLoading(true);
-    try {
-      setRequests(await getSolicitudes());
-    } catch (requestError) {
-      setError(getApiError(requestError));
-    } finally {
-      setLoading(false);
-    }
-  }
 
   return (
     <main className="app-shell">
@@ -105,7 +90,7 @@ export function SolicitudesPage() {
           <p className="eyebrow">Casa Estudiantil San Martín</p>
           <h1>Solicitud de cupo</h1>
         </div>
-        <span className="header-mark">CS</span>
+        <Link className="header-link" to="/">Volver a la residencia</Link>
       </header>
 
       <section className="hero">
@@ -120,9 +105,6 @@ export function SolicitudesPage() {
         </button>
         <button className={activeTab === 'lookup' ? 'tab active' : 'tab'} onClick={() => setActiveTab('lookup')}>
           Consultar estado
-        </button>
-        <button className={activeTab === 'admin' ? 'tab active' : 'tab'} onClick={() => setActiveTab('admin')}>
-          Panel autorizado
         </button>
       </nav>
 
@@ -166,12 +148,6 @@ export function SolicitudesPage() {
         </section>
       )}
 
-      {activeTab === 'admin' && (
-        <section className="card">
-          <div className="section-heading"><div><p className="eyebrow">Gestión interna</p><h3>Solicitudes registradas</h3></div>{canViewAll && <button className="secondary-button" disabled={loading} onClick={handleLoadRequests}>{loading ? 'Cargando...' : 'Actualizar listado'}</button>}</div>
-          {!canViewAll ? <div className="locked"><strong>Acceso restringido</strong><p>Esta vista está disponible únicamente para personal autorizado de coordinación, administración del sistema o administración de la fundación.</p></div> : requests.length === 0 ? <p className="muted">Selecciona “Actualizar listado” para consultar las solicitudes.</p> : <div className="table-wrap"><table><thead><tr><th>Aspirante</th><th>Documento</th><th>Universidad</th><th>Estado</th><th>Radicado</th></tr></thead><tbody>{requests.map((request) => <tr key={request.id}><td>{request.nombres} {request.apellidos}</td><td>{request.numeroDocumento}</td><td>{request.universidad}</td><td><StatusBadge status={request.estado} /></td><td><code>{request.id.slice(0, 8)}...</code></td></tr>)}</tbody></table></div>}
-        </section>
-      )}
     </main>
   );
 }
