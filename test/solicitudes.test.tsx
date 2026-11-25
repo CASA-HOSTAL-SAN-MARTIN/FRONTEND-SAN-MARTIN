@@ -1,12 +1,12 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { createSolicitud, getSolicitud, getSolicitudes } from '../src/api/client';
+import { MemoryRouter } from 'react-router-dom';
+import { createSolicitud, getSolicitud } from '../src/api/client';
 import { SolicitudesPage } from '../src/pages/SolicitudesPage';
 
 vi.mock('../src/api/client', () => ({
   createSolicitud: vi.fn(),
   getSolicitud: vi.fn(),
-  getSolicitudes: vi.fn(),
 }));
 
 const createdSolicitud = {
@@ -41,7 +41,7 @@ describe('Solicitud de cupo', () => {
   });
 
   it('marca como obligatorios los campos definidos por la API', () => {
-    render(<SolicitudesPage />);
+    render(<MemoryRouter><SolicitudesPage /></MemoryRouter>);
 
     expect(screen.getByLabelText('Nombres *')).toBeRequired();
     expect(screen.getByLabelText('Apellidos *')).toBeRequired();
@@ -53,7 +53,7 @@ describe('Solicitud de cupo', () => {
   });
 
   it('envía la solicitud y muestra el radicado devuelto por la API', async () => {
-    render(<SolicitudesPage />);
+    render(<MemoryRouter><SolicitudesPage /></MemoryRouter>);
     fillRequiredFields();
     fireEvent.submit(screen.getByRole('button', { name: 'Enviar solicitud' }).closest('form')!);
 
@@ -72,7 +72,7 @@ describe('Solicitud de cupo', () => {
 
   it('consulta y muestra el estado mediante el identificador', async () => {
     vi.mocked(getSolicitud).mockResolvedValue(createdSolicitud);
-    render(<SolicitudesPage />);
+    render(<MemoryRouter><SolicitudesPage /></MemoryRouter>);
     fireEvent.click(screen.getByRole('button', { name: 'Consultar estado' }));
     fireEvent.change(screen.getByLabelText('Identificador de solicitud *'), { target: { value: createdSolicitud.id } });
     fireEvent.submit(screen.getByLabelText('Identificador de solicitud *').closest('form')!);
@@ -86,19 +86,18 @@ describe('Solicitud de cupo', () => {
       response: { data: { message: 'Ya existe una solicitud registrada' } },
       isAxiosError: true,
     });
-    render(<SolicitudesPage />);
+    render(<MemoryRouter><SolicitudesPage /></MemoryRouter>);
     fillRequiredFields();
     fireEvent.submit(screen.getByRole('button', { name: 'Enviar solicitud' }).closest('form')!);
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Ya existe una solicitud registrada');
   });
 
-  it('restringe el listado general a roles autorizados', () => {
-    localStorage.setItem('userRole', 'ASPIRANTE_RESIDENTE');
-    render(<SolicitudesPage />);
-    fireEvent.click(screen.getByRole('button', { name: 'Panel autorizado' }));
+  it('solo muestra las secciones publicas de solicitud y consulta', () => {
+    render(<MemoryRouter><SolicitudesPage /></MemoryRouter>);
 
-    expect(screen.getByText('Acceso restringido')).toBeInTheDocument();
-    expect(getSolicitudes).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'Solicitar cupo' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Consultar estado' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Panel autorizado' })).not.toBeInTheDocument();
   });
 });

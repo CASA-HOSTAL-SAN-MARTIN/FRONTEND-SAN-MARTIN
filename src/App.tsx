@@ -6,6 +6,8 @@ import { ContratosPage } from './pages/ContratosPage';
 import { AspirantesPage } from './pages/AspirantesPage';
 import { ListaEsperaPage } from './pages/ListaEsperaPage';
 import { LoginPage } from './pages/LoginPage';
+import { NotFoundPage } from './pages/NotFoundPage';
+import { MainLayout } from './layouts/MainLayout';
 
 export default function App() {
   return (
@@ -13,11 +15,12 @@ export default function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/solicitar-cupo" element={<SolicitudesPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/camas" element={<CamasPage />} />
-      <Route path="/contratos" element={<ContratosPage />} />
-      <Route path="/aspirantes" element={<AspirantesPage />} />
-      <Route path="/lista-espera" element={<ListaEsperaPage />} />
+      <Route path="/camas" element={<MainLayout><CamasPage /></MainLayout>} />
+      <Route path="/contratos" element={<MainLayout><ContratosPage /></MainLayout>} />
+      <Route path="/aspirantes" element={<MainLayout><AspirantesPage /></MainLayout>} />
+      <Route path="/lista-espera" element={<MainLayout><ListaEsperaPage /></MainLayout>} />
       <Route path="/inicio" element={<HomePage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
