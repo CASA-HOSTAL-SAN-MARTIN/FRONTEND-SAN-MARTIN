@@ -23,6 +23,7 @@ export type SolicitudPayload = {
 
 export type Solicitud = SolicitudPayload & {
   id: string;
+  radicado: string;
   estado: SolicitudEstado;
   createdAt: string;
   updatedAt: string;

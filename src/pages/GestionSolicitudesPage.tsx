@@ -15,6 +15,7 @@ export function GestionSolicitudesPage() {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState('');
   const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -33,9 +34,15 @@ export function GestionSolicitudesPage() {
   async function changeStatus(solicitud: Solicitud, estado: SolicitudEstado) {
     setUpdatingId(solicitud.id);
     setError('');
+    setNotice('');
     try {
       const updated = await updateSolicitudEstado(solicitud.id, estado);
       setSolicitudes((current) => current.map((item) => item.id === updated.id ? updated : item));
+      if (estado === 'aprobada') {
+        setNotice(updated.accountSetupEmailSent
+          ? `Solicitud aprobada. Enviamos las instrucciones de acceso a ${solicitud.correo}.`
+          : 'Solicitud aprobada, pero no fue posible enviar las instrucciones. Verifica la configuración de correo y usa recuperación de contraseña para reenviar el enlace.');
+      }
     } catch {
       setError('No se pudo actualizar el estado. La solicitud pudo cambiar desde otra sesión; recarga e inténtalo de nuevo.');
     } finally {
@@ -51,6 +58,7 @@ export function GestionSolicitudesPage() {
         <p>Revisa cada aspirante y actualiza el avance de su proceso.</p>
       </section>
       {error && <div className="alert error" role="alert">{error}</div>}
+      {notice && <div className="alert success" role="status">{notice}</div>}
       {loading ? <section className="card" role="status">Cargando solicitudes…</section> : (
         <section className="request-list" aria-label="Solicitudes recibidas">
           {solicitudes.length === 0 && <div className="card"><p>No hay solicitudes registradas.</p></div>}

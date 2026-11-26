@@ -45,7 +45,7 @@ export function MiSolicitudPage() {
             <span className={`status status-${solicitud.estado}`}>{estadoLabels[solicitud.estado]}</span>
           </div>
           <dl className="request-details">
-            <div><dt>Radicado</dt><dd>{solicitud.id}</dd></div>
+            <div><dt>Radicado</dt><dd>{solicitud.radicado}</dd></div>
             <div><dt>Fecha de solicitud</dt><dd>{new Date(solicitud.createdAt).toLocaleDateString('es-CO')}</dd></div>
             <div><dt>Programa académico</dt><dd>{solicitud.programaAcademico}</dd></div>
             <div><dt>Universidad</dt><dd>{solicitud.universidad}</dd></div>

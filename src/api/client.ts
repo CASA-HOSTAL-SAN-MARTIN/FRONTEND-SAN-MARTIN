@@ -33,7 +33,14 @@ apiClient.interceptors.response.use(
 );
 
 export async function createSolicitud(payload: SolicitudPayload) {
-  const { data } = await apiClient.post<Solicitud & { accountSetupEmailSent: boolean }>('/api/solicitudes', payload);
+  const { data } = await apiClient.post<Solicitud & { confirmationEmailSent: boolean }>('/api/solicitudes', payload);
+  return data;
+}
+
+export type PublicSolicitudStatus = Pick<Solicitud, 'radicado' | 'estado' | 'createdAt'>;
+
+export async function checkPublicSolicitudStatus(radicado: string, correo: string) {
+  const { data } = await apiClient.post<PublicSolicitudStatus>('/api/solicitudes/consultar-estado', { radicado, correo });
   return data;
 }
 
@@ -48,7 +55,7 @@ export async function getSolicitudes() {
 }
 
 export async function updateSolicitudEstado(id: string, estado: SolicitudEstado) {
-  const { data } = await apiClient.patch<Solicitud>(
+  const { data } = await apiClient.patch<Solicitud & { accountSetupEmailSent?: boolean }>(
     `/api/solicitudes/${encodeURIComponent(id)}/estado`,
     { estado },
   );

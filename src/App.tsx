@@ -14,12 +14,14 @@ import { RoleDashboard } from './pages/RoleDashboard';
 import { SetPasswordPage } from './pages/SetPasswordPage';
 import { MiSolicitudPage } from './pages/MiSolicitudPage';
 import { GestionSolicitudesPage } from './pages/GestionSolicitudesPage';
+import { ConsultarCupoPage } from './pages/ConsultarCupoPage';
 
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/solicitar-cupo" element={<SolicitudesPage />} />
+      <Route path="/consultar-cupo" element={<ConsultarCupoPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/establecer-contrasena" element={<SetPasswordPage />} />
       <Route path="/mi-solicitud" element={<ProtectedRoute roles={roleAccess.residents}><MainLayout><MiSolicitudPage /></MainLayout></ProtectedRoute>} />
