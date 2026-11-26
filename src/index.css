@@ -493,6 +493,26 @@ html { scroll-behavior: smooth; }
 .role-module-card > span { position: absolute; right: 21px; bottom: 18px; color: #08724f; font-size: 1.3rem; }
 .login-auth-error { margin: 0 0 18px; border: 1px solid #e7a8a8; border-radius: 9px; padding: 11px 13px; color: #8b2424; background: #fff2f0; font-size: .9rem; line-height: 1.45; }
 .login-submit:disabled { cursor: wait; opacity: .72; }
+.request-list { display: grid; gap: 14px; margin: 20px 0; }
+.request-card { display: block; }
+.request-card-heading, .section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.request-card-heading h2 { margin: 0; color: #173c32; font-family: Georgia, serif; }
+.request-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.request-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 24px 0; }
+.request-details div { min-width: 0; border: 1px solid #dbe6dc; border-radius: 10px; padding: 14px; background: #fbfdf9; }
+.request-details dt { color: #6b7c70; font-size: .78rem; }
+.request-details dd { overflow-wrap: anywhere; margin: 5px 0 0; color: #173c32; font-weight: 700; }
+.status { display: inline-flex; flex: 0 0 auto; align-items: center; border-radius: 999px; padding: 7px 12px; color: #315f45; background: #e7f2e5; font-size: .82rem; font-weight: 700; }
+.status-en_revision { color: #795b16; background: #fbf1cf; }
+.status-aprobada { color: #17613a; background: #dff3e4; }
+.status-rechazada, .status-cancelada { color: #8b3030; background: #fbe8e6; }
+.set-password-page { display: grid; grid-template-columns: 1fr; place-items: center; }
+.set-password-page .login-panel { width: min(100%, 560px); min-height: auto; }
+.set-password-page .login-card { width: 100%; }
+@media (max-width: 600px) {
+  .request-card-heading { flex-direction: column; }
+  .request-details { grid-template-columns: 1fr; }
+}
 @media (max-width: 760px) {
   .module-navigation { min-height: 58px; flex-wrap: wrap; gap: 7px 14px; padding: 9px 16px; }
   .module-navigation-links { width: 100%; }

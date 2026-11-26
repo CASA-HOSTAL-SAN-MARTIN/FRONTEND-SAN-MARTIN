@@ -4,6 +4,8 @@ import { roleAccess } from '../auth/roleAccess';
 import type { UserRole } from '../types';
 
 const modules: { to: string; title: string; description: string; roles: readonly UserRole[] }[] = [
+  { to: '/mi-solicitud', title: 'Mi solicitud', description: 'Consulta el estado y los datos de tu solicitud de cupo.', roles: roleAccess.residents },
+  { to: '/solicitudes', title: 'Solicitudes de cupo', description: 'Revisa las solicitudes y actualiza su estado.', roles: roleAccess.solicitudes },
   { to: '/aspirantes', title: 'Aspirantes', description: 'Registrar y revisar información de aspirantes.', roles: roleAccess.aspirants },
   { to: '/lista-espera', title: 'Lista de espera', description: 'Consultar y gestionar aspirantes en espera.', roles: roleAccess.waitlist },
   { to: '/camas', title: 'Camas', description: 'Consultar ocupación y realizar asignaciones permitidas.', roles: roleAccess.beds },

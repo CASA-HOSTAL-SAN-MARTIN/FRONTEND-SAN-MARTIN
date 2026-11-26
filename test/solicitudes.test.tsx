@@ -1,12 +1,11 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import { createSolicitud, getSolicitud } from '../src/api/client';
+import { createSolicitud } from '../src/api/client';
 import { SolicitudesPage } from '../src/pages/SolicitudesPage';
 
 vi.mock('../src/api/client', () => ({
   createSolicitud: vi.fn(),
-  getSolicitud: vi.fn(),
 }));
 
 const createdSolicitud = {
@@ -37,7 +36,7 @@ describe('Solicitud de cupo', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
-    vi.mocked(createSolicitud).mockResolvedValue(createdSolicitud);
+    vi.mocked(createSolicitud).mockResolvedValue({ ...createdSolicitud, accountSetupEmailSent: true });
   });
 
   it('marca como obligatorios los campos definidos por la API', () => {
@@ -67,18 +66,13 @@ describe('Solicitud de cupo', () => {
       universidad: 'Universidad del Otún',
     }));
     expect(await screen.findByText('¡Solicitud recibida!')).toBeInTheDocument();
-    expect(screen.getByText(createdSolicitud.id)).toBeInTheDocument();
+    expect(screen.getByText(/enlace de un solo uso/i)).toBeInTheDocument();
   });
 
-  it('consulta y muestra el estado mediante el identificador', async () => {
-    vi.mocked(getSolicitud).mockResolvedValue(createdSolicitud);
+  it('deja la consulta del estado detr?s del inicio de sesi?n', () => {
     render(<MemoryRouter><SolicitudesPage /></MemoryRouter>);
-    fireEvent.click(screen.getByRole('button', { name: 'Consultar estado' }));
-    fireEvent.change(screen.getByLabelText('Identificador de solicitud *'), { target: { value: createdSolicitud.id } });
-    fireEvent.submit(screen.getByLabelText('Identificador de solicitud *').closest('form')!);
-
-    await waitFor(() => expect(getSolicitud).toHaveBeenCalledWith(createdSolicitud.id));
-    expect(await screen.findByText('Pendiente')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Identificador de solicitud *')).not.toBeInTheDocument();
+    expect(screen.getByText(/consulta su estado de forma privada/i)).toBeInTheDocument();
   });
 
   it('muestra errores devueltos por la API', async () => {
@@ -93,11 +87,9 @@ describe('Solicitud de cupo', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('Ya existe una solicitud registrada');
   });
 
-  it('solo muestra las secciones publicas de solicitud y consulta', () => {
+  it('presenta solo el formulario p?blico y dirige el seguimiento a la cuenta', () => {
     render(<MemoryRouter><SolicitudesPage /></MemoryRouter>);
-
-    expect(screen.getByRole('button', { name: 'Solicitar cupo' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Consultar estado' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Panel autorizado' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Enviar solicitud' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Consultar estado' })).not.toBeInTheDocument();
   });
 });

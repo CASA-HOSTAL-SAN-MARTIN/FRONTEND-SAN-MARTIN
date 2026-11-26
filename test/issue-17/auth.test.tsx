@@ -23,7 +23,7 @@ function renderLogin() {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/aspirantes" element={<h1>Panel de administración</h1>} />
+          <Route path="/solicitudes" element={<h1>Solicitudes de cupo</h1>} />
         </Routes>
       </AuthProvider>
     </MemoryRouter>,
@@ -55,7 +55,7 @@ describe('Issue 17: autenticación y acceso por rol', () => {
     fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'clave-segura' } });
     fireEvent.click(screen.getByRole('button', { name: /Iniciar sesión/ }));
 
-    expect(await screen.findByRole('heading', { name: 'Panel de administración' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Solicitudes de cupo' })).toBeInTheDocument();
     expect(apiClient.post).toHaveBeenCalledWith('/api/auth/login', { identificador: '12345678', contrasena: 'clave-segura' });
     expect(sessionStorage.getItem(AUTH_TOKEN_KEY)).toBe('jwt-demo');
   });
