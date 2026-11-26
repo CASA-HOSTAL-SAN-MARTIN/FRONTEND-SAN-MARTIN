@@ -41,10 +41,9 @@ function errorMessage(error: unknown) {
     const status = error.response?.status;
     const body = error.response?.data as { message?: unknown } | undefined;
     const message = Array.isArray(body?.message) ? body.message.join('. ') : body?.message;
-    if (typeof message === 'string' && message.toLocaleLowerCase('es').includes('inactiv')) {
-      return 'Tu cuenta está inactiva. Contacta al administrador.';
-    }
-    if (status === 401) return 'Documento o contraseña incorrectos.';
+    // El endpoint de login devuelve el mismo 401 para credenciales incorrectas
+    // y cuentas inactivas. No afirmes que la cuenta está inactiva sin confirmarlo.
+    if (status === 401) return 'Documento, correo o contraseña incorrectos.';
     if (status === 403) return typeof message === 'string' ? message : 'Tu cuenta no tiene permiso para ingresar.';
     if (!error.response) return 'No fue posible conectar con el servidor. Inténtalo de nuevo.';
     if (typeof message === 'string') return message;
@@ -92,7 +91,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async (numeroDocumento: string, password: string) => {
     try {
-      const { data } = await apiClient.post<LoginResponse>('/api/auth/login', { numeroDocumento, password });
+      const { data } = await apiClient.post<LoginResponse>('/api/auth/login', {
+        identificador: numeroDocumento,
+        contrasena: password,
+      });
       const token = data.access_token ?? data.accessToken ?? data.token;
       if (!token) throw new Error('El servidor no devolvió un token de acceso.');
       sessionStorage.setItem(AUTH_TOKEN_KEY, token);

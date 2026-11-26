@@ -2,6 +2,7 @@ import { type FormEvent, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 import { defaultPathForRole } from '../auth/roleAccess';
+import { requestPasswordRecovery } from '../api/client';
 
 type LoginLocationState = { from?: { pathname?: string } };
 
@@ -10,7 +11,8 @@ export function LoginPage() {
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [recoveryRequested, setRecoveryRequested] = useState(false);
+  const [recoveryMessage, setRecoveryMessage] = useState('');
+  const [recoveryLoading, setRecoveryLoading] = useState(false);
   const { isAuthenticated, login, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,7 +22,7 @@ export function LoginPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError('');
-    setRecoveryRequested(false);
+    setRecoveryMessage('');
     setSubmitting(true);
     try {
       const user = await login(documentNumber.trim(), password);
@@ -30,6 +32,24 @@ export function LoginPage() {
       setError(loginError instanceof Error ? loginError.message : 'No fue posible iniciar sesión. Inténtalo de nuevo.');
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function handleRecovery() {
+    setError('');
+    setRecoveryMessage('');
+    if (!documentNumber.trim()) {
+      setError('Escribe tu número de documento o correo en el campo superior para recuperar la contraseña.');
+      return;
+    }
+    setRecoveryLoading(true);
+    try {
+      const response = await requestPasswordRecovery(documentNumber.trim());
+      setRecoveryMessage(response.message);
+    } catch {
+      setError('No fue posible solicitar la recuperación. Verifica tu conexión e inténtalo de nuevo.');
+    } finally {
+      setRecoveryLoading(false);
     }
   }
 
@@ -48,13 +68,13 @@ export function LoginPage() {
           <h2 id="login-title">Qué bueno verte.</h2>
           <p className="login-description">Ingresa con las credenciales que te fueron asignadas. Tus permisos dependen de tu cuenta.</p>
           {error && <div className="alert error login-auth-error" role="alert">{error}</div>}
-          {recoveryRequested && <div className="alert login-notice" role="status">La recuperación de contraseña todavía no está disponible. Comunícate con el personal administrador.</div>}
+          {recoveryMessage && <div className="alert login-notice" role="status">{recoveryMessage}</div>}
           <form onSubmit={handleSubmit}>
-            <label>Número de documento<input required inputMode="numeric" autoComplete="username" value={documentNumber} onChange={(event) => setDocumentNumber(event.target.value)} placeholder="Tu número de documento" /></label>
+            <label>Documento o correo electrónico<input required autoComplete="username" value={documentNumber} onChange={(event) => setDocumentNumber(event.target.value)} placeholder="Tu documento o correo" /></label>
             <label>Contraseña<input required type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Ingresa tu contraseña" /></label>
             <button className="apply-button login-submit" disabled={submitting} type="submit">{submitting ? 'Validando...' : 'Iniciar sesión'} <span aria-hidden="true">→</span></button>
           </form>
-          <p className="login-help"><span>¿Olvidaste tu contraseña?</span> <button type="button" onClick={() => setRecoveryRequested(true)}>Recuperarla</button></p>
+          <p className="login-help"><span>¿Olvidaste tu contraseña?</span> <button type="button" disabled={recoveryLoading} onClick={() => void handleRecovery()}>{recoveryLoading ? 'Enviando…' : 'Enviar enlace'}</button></p>
           <Link className="login-back" to="/">← Volver a la página principal</Link>
         </section>
       </section>

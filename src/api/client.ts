@@ -8,6 +8,7 @@ import type {
   EntradaListaEspera,
   Solicitud,
   SolicitudPayload,
+  SolicitudEstado,
 } from '../types';
 import type { Contrato, ContratoPayload } from '../types/contratos';
 
@@ -32,17 +33,35 @@ apiClient.interceptors.response.use(
 );
 
 export async function createSolicitud(payload: SolicitudPayload) {
-  const { data } = await apiClient.post<Solicitud>('/api/solicitudes', payload);
+  const { data } = await apiClient.post<Solicitud & { accountSetupEmailSent: boolean }>('/api/solicitudes', payload);
   return data;
 }
 
-export async function getSolicitud(id: string) {
-  const { data } = await apiClient.get<Solicitud>(`/api/solicitudes/${encodeURIComponent(id)}`);
+export async function getMySolicitud() {
+  const { data } = await apiClient.get<Solicitud>('/api/solicitudes/mia');
   return data;
 }
 
 export async function getSolicitudes() {
   const { data } = await apiClient.get<Solicitud[]>('/api/solicitudes');
+  return data;
+}
+
+export async function updateSolicitudEstado(id: string, estado: SolicitudEstado) {
+  const { data } = await apiClient.patch<Solicitud>(
+    `/api/solicitudes/${encodeURIComponent(id)}/estado`,
+    { estado },
+  );
+  return data;
+}
+
+export async function requestPasswordRecovery(identificador: string) {
+  const { data } = await apiClient.post<{ message: string }>('/api/auth/password/recovery', { identificador });
+  return data;
+}
+
+export async function setPassword(token: string, contrasena: string) {
+  const { data } = await apiClient.post<{ message: string }>('/api/auth/password/setup', { token, contrasena });
   return data;
 }
 

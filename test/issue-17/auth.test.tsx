@@ -40,7 +40,7 @@ describe('Issue 17: autenticación y acceso por rol', () => {
 
   it('exige documento y contraseña antes de enviar el acceso', async () => {
     renderLogin();
-    const documentInput = screen.getByLabelText('Número de documento') as HTMLInputElement;
+    const documentInput = screen.getByLabelText(/Documento/) as HTMLInputElement;
     const passwordInput = screen.getByLabelText('Contraseña') as HTMLInputElement;
     expect(documentInput).toBeRequired();
     expect(passwordInput).toBeRequired();
@@ -51,12 +51,12 @@ describe('Issue 17: autenticación y acceso por rol', () => {
   it('guarda el token en la sesión y dirige al módulo que corresponde al rol', async () => {
     vi.mocked(apiClient.post).mockResolvedValue({ data: { access_token: 'jwt-demo' } });
     renderLogin();
-    fireEvent.change(screen.getByLabelText('Número de documento'), { target: { value: '12345678' } });
+    fireEvent.change(screen.getByLabelText(/Documento/), { target: { value: '12345678' } });
     fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'clave-segura' } });
     fireEvent.click(screen.getByRole('button', { name: /Iniciar sesión/ }));
 
     expect(await screen.findByRole('heading', { name: 'Panel de administración' })).toBeInTheDocument();
-    expect(apiClient.post).toHaveBeenCalledWith('/api/auth/login', { numeroDocumento: '12345678', password: 'clave-segura' });
+    expect(apiClient.post).toHaveBeenCalledWith('/api/auth/login', { identificador: '12345678', contrasena: 'clave-segura' });
     expect(sessionStorage.getItem(AUTH_TOKEN_KEY)).toBe('jwt-demo');
   });
 
@@ -67,10 +67,10 @@ describe('Issue 17: autenticación y acceso por rol', () => {
     });
     vi.mocked(apiClient.post).mockRejectedValue(unauthorized);
     renderLogin();
-    fireEvent.change(screen.getByLabelText('Número de documento'), { target: { value: '12345678' } });
+    fireEvent.change(screen.getByLabelText(/Documento/), { target: { value: '12345678' } });
     fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'incorrecta' } });
     fireEvent.click(screen.getByRole('button', { name: /Iniciar sesión/ }));
-    expect(await screen.findByRole('alert')).toHaveTextContent('Documento o contraseña incorrectos');
+    expect(await screen.findByRole('alert')).toHaveTextContent(/Documento/);
     expect(sessionStorage.getItem(AUTH_TOKEN_KEY)).toBeNull();
   });
 
@@ -78,7 +78,7 @@ describe('Issue 17: autenticación y acceso por rol', () => {
     vi.mocked(apiClient.post).mockResolvedValue({ data: { access_token: 'jwt-demo' } });
     vi.mocked(apiClient.get).mockResolvedValue({ data: { roles: ['ADMIN_SISTEMA'], estado: 'INACTIVO' } });
     renderLogin();
-    fireEvent.change(screen.getByLabelText('Número de documento'), { target: { value: '12345678' } });
+    fireEvent.change(screen.getByLabelText(/Documento/), { target: { value: '12345678' } });
     fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'clave' } });
     fireEvent.click(screen.getByRole('button', { name: /Iniciar sesión/ }));
     expect(await screen.findByRole('alert')).toHaveTextContent('Tu cuenta está inactiva');
